@@ -1,10 +1,12 @@
 node_modules
 HELP.md
+.env
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+/src/main/frontend
 
 ### STS ###
 .apt_generated

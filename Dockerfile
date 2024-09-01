@@ -1,5 +1,5 @@
 FROM openjdk:21-slim
+ENV version=0.0.1-SNAPSHOT
 WORKDIR /app
-COPY . .
-RUN ./gradlew build -Pvaadin.productionMode -x test
-CMD ["java", "-jar", "build/libs/pokeinfo-0.0.1-SNAPSHOT.jar"]
+COPY build/libs/pokeinfo-${version}.jar .
+CMD java -jar pokeinfo-${version}.jar

@@ -1,4 +1,4 @@
-package industries.lemon.pokeinfo.entity;
+package industries.lemon.pokeinfo.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;

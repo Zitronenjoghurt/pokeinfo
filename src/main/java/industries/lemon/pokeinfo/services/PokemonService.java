@@ -38,6 +38,13 @@ public class PokemonService {
                         .orElseGet(() -> fetchAndSavePokemon(pokemonId)));
     }
 
+    public Mono<Set<Ability>> getInitializedAbilities(Pokemon pokemon) {
+        return Mono.just(pokemon.getAbilities())
+                .flatMapIterable(abilities -> abilities)
+                .flatMap(abilityService::initializeAbility)
+                .collect(Collectors.toSet());
+    }
+
     protected Mono<Pokemon> fetchAndSavePokemon(int pokemonId) {
         return pokeApiClient.getPokemonById(pokemonId)
                 .publishOn(Schedulers.boundedElastic())

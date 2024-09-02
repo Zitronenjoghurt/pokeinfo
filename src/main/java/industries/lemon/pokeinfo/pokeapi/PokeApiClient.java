@@ -1,8 +1,10 @@
 package industries.lemon.pokeinfo.pokeapi;
 
+import industries.lemon.pokeinfo.pokeapi.models.AbilityResponse;
 import industries.lemon.pokeinfo.pokeapi.models.PokemonResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -10,12 +12,19 @@ import reactor.core.publisher.Mono;
 public class PokeApiClient {
     private final WebClient webClient;
 
-
     public PokeApiClient(
             WebClient.Builder webClientBuilder,
-            @Value("${pokeapi.base-url}") String baseUrl
+            @Value("${pokeapi.base-url}") String baseUrl,
+            @Value("${pokeapi.client-buffer-size}") int clientBufferSize
     ) {
-        this.webClient = webClientBuilder.baseUrl(baseUrl).build();
+        ExchangeStrategies strategies = ExchangeStrategies.builder()
+                .codecs(codecs -> codecs.defaultCodecs().maxInMemorySize(clientBufferSize))
+                .build();
+
+        this.webClient = webClientBuilder
+                .baseUrl(baseUrl)
+                .exchangeStrategies(strategies)
+                .build();
     }
 
     public Mono<PokemonResponse> getPokemonById(int id) {
@@ -23,5 +32,12 @@ public class PokeApiClient {
                 .uri("/pokemon/{id}", id)
                 .retrieve()
                 .bodyToMono(PokemonResponse.class);
+    }
+
+    public Mono<AbilityResponse> getAbilityById(int id) {
+        return webClient.get()
+                .uri("/ability/{id}", id)
+                .retrieve()
+                .bodyToMono(AbilityResponse.class);
     }
 }

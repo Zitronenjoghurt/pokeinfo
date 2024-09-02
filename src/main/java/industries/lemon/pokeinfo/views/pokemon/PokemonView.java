@@ -8,11 +8,8 @@ import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import industries.lemon.pokeinfo.entities.Ability;
 import industries.lemon.pokeinfo.entities.Pokemon;
 import industries.lemon.pokeinfo.services.PokemonService;
-
-import java.util.Set;
 
 @Route("pokemon")
 @PageTitle("Pokemon")

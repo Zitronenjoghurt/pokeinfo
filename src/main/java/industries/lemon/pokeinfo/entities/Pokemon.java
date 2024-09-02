@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -13,9 +12,9 @@ import java.util.UUID;
 @Table(name = "pokemon")
 public class Pokemon {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
-    private UUID id;
+    private Long id;
 
     @Column(updatable = false, nullable = false)
     private int pokemonId;
@@ -38,7 +37,7 @@ public class Pokemon {
     @Column(updatable = false, nullable = false)
     private int weight;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @JoinTable(
         name = "pokemon_abilities",
         joinColumns = { @JoinColumn(name = "pokemon_id") },

@@ -5,19 +5,12 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class PokemonAbility {
-    private boolean isHidden;
-    private int slot;
-    private NamedApiResource ability;
-
-    public String getName() {
-        return ability.getName();
-    }
-
-    public Integer getId() {
-        return ability.getId();
-    }
+public class AbilityEffectChange {
+    private List<Effect> effectEntries;
+    private NamedApiResource versionGroup;
 }

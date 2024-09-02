@@ -8,16 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class PokemonAbility {
-    private boolean isHidden;
-    private int slot;
-    private NamedApiResource ability;
-
-    public String getName() {
-        return ability.getName();
-    }
-
-    public Integer getId() {
-        return ability.getId();
-    }
+public class LanguageResponse {
+    private String name;
 }

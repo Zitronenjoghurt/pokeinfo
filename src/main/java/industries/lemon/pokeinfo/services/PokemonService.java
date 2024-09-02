@@ -1,24 +1,33 @@
 package industries.lemon.pokeinfo.services;
 
+import industries.lemon.pokeinfo.entities.Ability;
 import industries.lemon.pokeinfo.entities.Pokemon;
 import industries.lemon.pokeinfo.pokeapi.PokeApiClient;
+import industries.lemon.pokeinfo.pokeapi.models.PokemonAbility;
 import industries.lemon.pokeinfo.pokeapi.models.PokemonResponse;
 import industries.lemon.pokeinfo.repositories.PokemonRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 public class PokemonService {
     private final PokeApiClient pokeApiClient;
     private final PokemonRepository pokemonRepository;
+    private final AbilityService abilityService;
 
     public PokemonService(
             PokeApiClient pokeApiClient,
-            PokemonRepository pokemonRepository
+            PokemonRepository pokemonRepository,
+            AbilityService abilityService
     ) {
         this.pokeApiClient = pokeApiClient;
         this.pokemonRepository = pokemonRepository;
+        this.abilityService = abilityService;
     }
 
     public Mono<Pokemon> getById(int pokemonId) {
@@ -29,13 +38,20 @@ public class PokemonService {
                         .orElseGet(() -> fetchAndSavePokemon(pokemonId)));
     }
 
-    private Mono<Pokemon> fetchAndSavePokemon(int pokemonId) {
+    protected Mono<Pokemon> fetchAndSavePokemon(int pokemonId) {
         return pokeApiClient.getPokemonById(pokemonId)
-                .map(PokemonResponse::intoPokemon)
                 .publishOn(Schedulers.boundedElastic())
-                .map(pokemon -> {
-                    pokemonRepository.save(pokemon);
-                    return pokemon;
+                .map(response -> {
+                    Pokemon pokemon = response.intoPokemon();
+                    pokemon.setAbilities(getPokemonAbilities(response));
+                    return pokemonRepository.save(pokemon);
                 });
+    }
+
+    protected Set<Ability> getPokemonAbilities(PokemonResponse response) {
+        List<PokemonAbility> abilities = response.getAbilities();
+        return abilities.stream()
+                .map(pokemonAbility -> abilityService.findByIdOrCreate(pokemonAbility.getId()))
+                .collect(Collectors.toSet());
     }
 }

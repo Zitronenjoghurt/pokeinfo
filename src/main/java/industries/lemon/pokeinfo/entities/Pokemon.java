@@ -38,11 +38,11 @@ public class Pokemon {
     @Column(updatable = false, nullable = false)
     private int weight;
 
-    @ManyToMany(mappedBy = "pokemon", fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinTable(
         name = "pokemon_abilities",
-        joinColumns = @JoinColumn(name = "pokemon_id"),
-        inverseJoinColumns = @JoinColumn(name = "ability_id")
+        joinColumns = { @JoinColumn(name = "pokemon_id") },
+        inverseJoinColumns = { @JoinColumn(name = "ability_id") }
     )
     private Set<Ability> abilities;
 }

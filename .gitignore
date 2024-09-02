@@ -7,6 +7,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 /src/main/frontend
+/example_jsons
 
 ### STS ###
 .apt_generated

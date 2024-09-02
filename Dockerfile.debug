@@ -1,0 +1,12 @@
+FROM openjdk:21-slim
+
+ENV version=0.0.1-SNAPSHOT
+ENV JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+
+WORKDIR /app
+
+COPY build/libs/pokeinfo-${version}.jar .
+
+EXPOSE 5005
+
+CMD java -jar pokeinfo-${version}.jar

@@ -2,8 +2,9 @@ package industries.lemon.pokeinfo.services;
 
 import industries.lemon.pokeinfo.entities.Ability;
 import industries.lemon.pokeinfo.entities.Pokemon;
+import industries.lemon.pokeinfo.entities.PokemonAbility;
 import industries.lemon.pokeinfo.pokeapi.PokeApiClient;
-import industries.lemon.pokeinfo.pokeapi.models.PokemonAbility;
+import industries.lemon.pokeinfo.pokeapi.models.PokemonAbilityResponse;
 import industries.lemon.pokeinfo.pokeapi.models.PokemonResponse;
 import industries.lemon.pokeinfo.repositories.PokemonRepository;
 import org.springframework.stereotype.Service;
@@ -40,21 +41,21 @@ public class PokemonService extends BaseEntityService<Pokemon, PokemonRepository
     @Override
     protected Pokemon fromResponse(PokemonResponse response) {
         Pokemon pokemon = response.intoPokemon();
-        pokemon.setAbilities(findOrCreateAbilities(response));
+        pokemon.setPokemonAbilities(findOrCreateAbilities(response));
         return pokemon;
     }
 
-    public Mono<Set<Ability>> getInitializedAbilities(Pokemon pokemon) {
-        return Mono.just(pokemon.getAbilities())
-                .flatMapIterable(abilities -> abilities)
-                .flatMap(abilityService::getInitialized)
-                .collect(Collectors.toSet());
-    }
-
-    protected Set<Ability> findOrCreateAbilities(PokemonResponse response) {
-        List<PokemonAbility> abilities = response.getAbilities();
-        return abilities.stream()
-                .map(pokemonAbility -> abilityService.findByIdOrCreate(pokemonAbility.getId()))
+    protected Set<PokemonAbility> findOrCreateAbilities(PokemonResponse response) {
+        List<PokemonAbilityResponse> pokemonAbilities = response.getAbilities();
+        return pokemonAbilities.stream()
+                .map(pokemonAbilityResponse -> {
+                    Ability ability = abilityService.findByIdOrCreate(pokemonAbilityResponse.getId());
+                    PokemonAbility pokemonAbility = new PokemonAbility();
+                    pokemonAbility.setAbility(ability);
+                    pokemonAbility.setSlot(pokemonAbilityResponse.getSlot());
+                    pokemonAbility.setHidden(pokemonAbilityResponse.isHidden());
+                    return pokemonAbility;
+                })
                 .collect(Collectors.toSet());
     }
 }

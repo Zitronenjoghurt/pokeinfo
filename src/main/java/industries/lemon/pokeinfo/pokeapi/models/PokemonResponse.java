@@ -18,7 +18,7 @@ public class PokemonResponse extends BaseEntityResponse {
     private boolean isDefault;
     private int order;
     private int weight;
-    private List<PokemonAbility> abilities;
+    private List<PokemonAbilityResponse> abilities;
 
     public Pokemon intoPokemon() {
         Pokemon pokemon = new Pokemon();

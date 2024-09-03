@@ -17,9 +17,9 @@ public class Ability extends BaseInitializableEntity<AbilityResponse> {
     @Column(updatable = false, nullable = false)
     private int abilityId;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "abilities")
+    @OneToMany(mappedBy = "ability")
     @JsonIgnore
-    private Set<Pokemon> pokemon;
+    private Set<PokemonAbility> pokemonAbilities;
 
     @ManyToOne
     @JoinColumn(name = "generation_id")

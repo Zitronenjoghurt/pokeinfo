@@ -32,13 +32,8 @@ public class Pokemon extends BaseEntity {
     @Column(updatable = false, nullable = false)
     private int weight;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
-    @JoinTable(
-        name = "pokemon_abilities",
-        joinColumns = { @JoinColumn(name = "pokemon_id") },
-        inverseJoinColumns = { @JoinColumn(name = "ability_id") }
-    )
-    private Set<Ability> abilities;
+    @OneToMany(mappedBy = "pokemon", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PokemonAbility> pokemonAbilities;
 
     @Override
     public int getEntityId() {

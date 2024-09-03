@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class PokemonAbility {
+public class PokemonAbilityResponse {
     private boolean isHidden;
     private int slot;
     private NamedApiResource ability;

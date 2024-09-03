@@ -17,7 +17,7 @@ public class AbilityResponse extends BaseEntityResponse {
     private NamedApiResource originGeneration;
     private List<LocalizedNameResponse> names;
     private List<VerboseEffectResponse> effectEntries;
-    private List<AbilityEffectChange> effectChanges;
+    private List<AbilityEffectChange> effectChanges; // ToDo
     private List<AbilityFlavorText> flavorTextEntries;
-    private List<AbilityPokemon> pokemon;
+    private List<AbilityPokemon> pokemon; // Todo (probably not)
 }

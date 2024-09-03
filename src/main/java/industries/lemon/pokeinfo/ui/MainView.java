@@ -11,20 +11,18 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import industries.lemon.pokeinfo.services.PokemonService;
+import industries.lemon.pokeinfo.services.PokemonNameService;
 import industries.lemon.pokeinfo.ui.tabs.PokemonView;
 
 @Route("")
 @PageTitle("Test")
 @AnonymousAllowed
 public class MainView extends AppLayout {
-    private final PokemonService pokemonService;
+    private final PokemonNameService pokemonNameService;
     private final VerticalLayout contentLayout;
-    private Button homeButton;
-    private Button pokemonButton;
 
-    public MainView(PokemonService pokemonService) {
-        this.pokemonService = pokemonService;
+    public MainView(PokemonNameService pokemonNameService) {
+        this.pokemonNameService = pokemonNameService;
 
         DrawerToggle toggle = new DrawerToggle();
         H1 title = new H1("Poke-Info");
@@ -71,6 +69,6 @@ public class MainView extends AppLayout {
 
     private void showPokemonContent() {
         contentLayout.removeAll();
-        contentLayout.add(new PokemonView(pokemonService));
+        contentLayout.add(new PokemonView(pokemonNameService));
     }
 }

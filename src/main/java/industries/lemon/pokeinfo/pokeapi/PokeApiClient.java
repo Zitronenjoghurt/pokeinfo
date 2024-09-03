@@ -1,6 +1,7 @@
 package industries.lemon.pokeinfo.pokeapi;
 
 import industries.lemon.pokeinfo.pokeapi.models.AbilityResponse;
+import industries.lemon.pokeinfo.pokeapi.models.GenerationResponse;
 import industries.lemon.pokeinfo.pokeapi.models.PokemonResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,5 +40,12 @@ public class PokeApiClient {
                 .uri("/ability/{id}", id)
                 .retrieve()
                 .bodyToMono(AbilityResponse.class);
+    }
+
+    public Mono<GenerationResponse> getGenerationById(int id) {
+        return webClient.get()
+                .uri("/generation/{id}", id)
+                .retrieve()
+                .bodyToMono(GenerationResponse.class);
     }
 }

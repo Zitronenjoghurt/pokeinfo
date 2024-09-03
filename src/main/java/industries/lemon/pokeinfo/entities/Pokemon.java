@@ -10,12 +10,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name = "pokemon")
-public class Pokemon {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false)
-    private Long id;
-
+public class Pokemon extends BaseEntity {
     @Column(updatable = false, nullable = false)
     private int pokemonId;
 
@@ -44,4 +39,14 @@ public class Pokemon {
         inverseJoinColumns = { @JoinColumn(name = "ability_id") }
     )
     private Set<Ability> abilities;
+
+    @Override
+    public int getEntityId() {
+        return getPokemonId();
+    }
+
+    @Override
+    public void setEntityId(int id) {
+        setPokemonId(id);
+    }
 }

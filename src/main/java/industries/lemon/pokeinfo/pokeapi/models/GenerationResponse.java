@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class GenerationResponse {
+public class GenerationResponse extends BaseEntityResponse {
     private int id;
     private String name;
     private List<LocalizedNameResponse> names;

@@ -1,6 +1,7 @@
 package industries.lemon.pokeinfo.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import industries.lemon.pokeinfo.pokeapi.models.GenerationResponse;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,19 +13,29 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name = "generations")
-public class Generation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false)
-    private Long id;
-
+public class Generation extends BaseInitializableEntity<GenerationResponse> {
     @Column(nullable = false, updatable = false)
     private int generationId;
-
-    @Column(nullable = false)
-    private boolean isInitialized = false;
 
     @OneToMany(mappedBy = "generation")
     @JsonIgnore
     private Set<Ability> abilities = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinTable
+    private Set<LocalizedName> localizedNames = new HashSet<>();
+
+
+    @Override
+    public void applyResponse(GenerationResponse response) {}
+
+    @Override
+    public int getEntityId() {
+        return getGenerationId();
+    }
+
+    @Override
+    public void setEntityId(int id) {
+        setGenerationId(id);
+    }
 }

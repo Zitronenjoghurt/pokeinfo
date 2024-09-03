@@ -36,7 +36,7 @@ public class PokemonView extends VerticalLayout implements HasUrlParameter<Integ
         }
 
         UI ui = UI.getCurrent();
-        pokemonService.getById(parameter).subscribe(
+        pokemonService.fetch(parameter).subscribe(
                 pokemon -> ui.access(() -> displayPokemon(pokemon)),
                 error -> ui.access(() -> handleError(error))
         );

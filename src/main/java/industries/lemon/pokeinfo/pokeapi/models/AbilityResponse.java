@@ -10,8 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class AbilityResponse {
-    private int id;
+public class AbilityResponse extends BaseEntityResponse {
     private String name;
     private Boolean isMainSeries;
     @JsonProperty("generation")

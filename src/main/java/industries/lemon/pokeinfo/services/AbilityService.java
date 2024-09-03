@@ -13,16 +13,14 @@ import industries.lemon.pokeinfo.repositories.LocalizedNameRepository;
 import industries.lemon.pokeinfo.repositories.VerboseEffectRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class AbilityService {
-    private final PokeApiClient pokeApiClient;
-    private final AbilityRepository abilityRepository;
+public class AbilityService extends BaseInitializableEntityService<Ability, AbilityRepository, AbilityResponse> {
     private final LocalizedNameRepository localizedNameRepository;
     private final VerboseEffectRepository verboseEffectRepository;
     private final GenerationService generationService;
@@ -34,38 +32,33 @@ public class AbilityService {
             VerboseEffectRepository verboseEffectRepository,
             GenerationService generationService
     ) {
-        this.pokeApiClient = pokeApiClient;
-        this.abilityRepository = abilityRepository;
+        super(pokeApiClient, abilityRepository, Ability::new);
         this.localizedNameRepository = localizedNameRepository;
         this.verboseEffectRepository = verboseEffectRepository;
         this.generationService = generationService;
     }
 
-    public Ability findByIdOrCreate(int abilityId) {
-        return abilityRepository.findByAbilityId(abilityId)
-            .orElseGet(() -> {
-                Ability newAbility = new Ability();
-                newAbility.setAbilityId(abilityId);
-                abilityRepository.save(newAbility);
-                return newAbility;
-            });
+    @Override
+    public Optional<Ability> findById(int id) {
+        return repository.findByAbilityId(id);
     }
 
-    public Mono<Ability> initializeAbility(Ability ability) {
-        if (ability.isInitialized()) {
-            return Mono.just(ability);
-        }
+    @Override
+    protected Mono<AbilityResponse> fetchData(int id) {
+        return pokeApiClient.getAbilityById(id);
+    }
 
-        return pokeApiClient.getAbilityById(ability.getAbilityId())
-            .publishOn(Schedulers.boundedElastic())
-            .map(abilityResponse -> {
-                Generation generation = generationService.findByIdOrCreate(abilityResponse.getOriginGeneration().getId());
-                Set<LocalizedName> localizedNames = createLocalizedNames(abilityResponse);
-                Set<VerboseEffect> verboseEffects = createVerboseEffects(abilityResponse);
-                ability.initializeFromResponse(abilityResponse, generation, localizedNames, verboseEffects);
-                abilityRepository.save(ability);
-                return ability;
-            });
+    @Override
+    protected void pushDataFromResponse(Ability ability, AbilityResponse response) {
+        Generation generation = generationService.findByIdOrCreate(response.getOriginGeneration().getId());
+        Set<LocalizedName> localizedNames = createLocalizedNames(response);
+        Set<VerboseEffect> verboseEffects = createVerboseEffects(response);
+
+        ability.applyResponse(response);
+        ability.setGeneration(generation);
+        ability.setLocalizedNames(localizedNames);
+        ability.setVerboseEffects(verboseEffects);
+        ability.finishInitialization();
     }
 
     protected Set<LocalizedName> createLocalizedNames(AbilityResponse response) {

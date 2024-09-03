@@ -13,17 +13,9 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name = "abilities")
-public class Ability {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false)
-    private Long id;
-
+public class Ability extends BaseInitializableEntity<AbilityResponse> {
     @Column(updatable = false, nullable = false)
     private int abilityId;
-
-    @Column(nullable = false)
-    private boolean isInitialized = false;
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "abilities")
     @JsonIgnore
@@ -47,17 +39,19 @@ public class Ability {
     @JoinColumn(name = "ability_id")
     private Set<VerboseEffect> verboseEffects = new HashSet<>();
 
-    public void initializeFromResponse(
-            AbilityResponse abilityResponse,
-            Generation generation,
-            Set<LocalizedName> localizedNames,
-            Set<VerboseEffect> verboseEffects
-    ) {
-        setName(abilityResponse.getName());
-        setIsMainSeries(abilityResponse.getIsMainSeries());
-        setGeneration(generation);
-        setLocalizedNames(localizedNames);
-        setVerboseEffects(verboseEffects);
-        setInitialized(true);
+    @Override
+    public void applyResponse(AbilityResponse response) {
+        setName(response.getName());
+        setIsMainSeries(response.getIsMainSeries());
+    }
+
+    @Override
+    public int getEntityId() {
+        return getAbilityId();
+    }
+
+    @Override
+    public void setEntityId(int id) {
+        setAbilityId(id);
     }
 }

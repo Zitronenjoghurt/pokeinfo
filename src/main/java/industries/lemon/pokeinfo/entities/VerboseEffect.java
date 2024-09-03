@@ -12,12 +12,12 @@ public class VerboseEffect {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
-    private long id;
+    private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 16024)
     private String effect;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 16024)
     private String shortEffect;
 
     @Column(nullable = false)

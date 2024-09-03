@@ -4,19 +4,15 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
+@MappedSuperclass
 @Getter
 @Setter
-@Table(name = "localized_names")
-public class LocalizedName {
+public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
-    private String language;
+    public abstract int getEntityId();
+    public abstract void setEntityId(int id);
 }

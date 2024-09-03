@@ -11,8 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class PokemonResponse {
-    private int id;
+public class PokemonResponse extends BaseEntityResponse {
     private String name;
     private int baseExperience;
     private int height;
@@ -23,7 +22,7 @@ public class PokemonResponse {
 
     public Pokemon intoPokemon() {
         Pokemon pokemon = new Pokemon();
-        pokemon.setPokemonId(id);
+        pokemon.setPokemonId(getId());
         pokemon.setName(name);
         pokemon.setBaseExperience(baseExperience);
         pokemon.setHeight(height);

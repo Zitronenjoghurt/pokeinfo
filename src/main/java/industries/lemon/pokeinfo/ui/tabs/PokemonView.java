@@ -4,12 +4,14 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import industries.lemon.pokeinfo.services.PokemonNameService;
+import industries.lemon.pokeinfo.services.PokemonSpeciesService;
 
 import java.util.List;
 import java.util.Map;
 
 public class PokemonView extends VerticalLayout {
     private final PokemonNameService pokemonNameService;
+    private final PokemonSpeciesService pokemonSpeciesService;
     private final ComboBox<Integer> languageSelector;
     private final ComboBox<String> searchBar;
 
@@ -21,8 +23,12 @@ public class PokemonView extends VerticalLayout {
             9, "🇺🇸"       // English
     );
 
-    public PokemonView(PokemonNameService pokemonNameService) {
+    public PokemonView(
+            PokemonNameService pokemonNameService,
+            PokemonSpeciesService pokemonSpeciesService
+    ) {
         this.pokemonNameService = pokemonNameService;
+        this.pokemonSpeciesService = pokemonSpeciesService;
 
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.START);
@@ -45,9 +51,31 @@ public class PokemonView extends VerticalLayout {
         add(searchLayout);
     }
 
+    private void search() {
+        String speciesName = searchBar.getValue();
+        int languageId = languageSelector.getValue();
+        int speciesId = pokemonNameService.getSpeciesIdByName(speciesName, languageId);
+        if (speciesId == -1) {
+            return;
+        }
+
+        pokemonSpeciesService.fetch(speciesId).subscribe(
+                species -> {
+                    // Visualize pokemon species
+                },
+                error -> {}
+        );
+    }
+
     private ComboBox<String> createSearchBar() {
         ComboBox<String> searchBar = new ComboBox<>("Pokemon");
         searchBar.setAllowCustomValue(true);
+        searchBar.addValueChangeListener(event -> {
+            search();
+        });
+        searchBar.addCustomValueSetListener(event -> {
+            search();
+        });
         return searchBar;
     }
 

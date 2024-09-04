@@ -2,7 +2,6 @@ package industries.lemon.pokeinfo.ui;
 
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -12,6 +11,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import industries.lemon.pokeinfo.services.PokemonNameService;
+import industries.lemon.pokeinfo.services.PokemonSpeciesService;
 import industries.lemon.pokeinfo.ui.tabs.PokemonView;
 
 @Route("")
@@ -19,10 +19,15 @@ import industries.lemon.pokeinfo.ui.tabs.PokemonView;
 @AnonymousAllowed
 public class MainView extends AppLayout {
     private final PokemonNameService pokemonNameService;
+    private final PokemonSpeciesService pokemonSpeciesService;
     private final VerticalLayout contentLayout;
 
-    public MainView(PokemonNameService pokemonNameService) {
+    public MainView(
+            PokemonNameService pokemonNameService,
+            PokemonSpeciesService pokemonSpeciesService
+    ) {
         this.pokemonNameService = pokemonNameService;
+        this.pokemonSpeciesService = pokemonSpeciesService;
 
         DrawerToggle toggle = new DrawerToggle();
         H1 title = new H1("Poke-Info");
@@ -69,6 +74,6 @@ public class MainView extends AppLayout {
 
     private void showPokemonContent() {
         contentLayout.removeAll();
-        contentLayout.add(new PokemonView(pokemonNameService));
+        contentLayout.add(new PokemonView(pokemonNameService, pokemonSpeciesService));
     }
 }

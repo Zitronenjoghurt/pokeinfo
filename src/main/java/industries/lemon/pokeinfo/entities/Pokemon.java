@@ -1,5 +1,6 @@
 package industries.lemon.pokeinfo.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +35,10 @@ public class Pokemon extends BaseEntity {
 
     @OneToMany(mappedBy = "pokemon", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PokemonAbility> pokemonAbilities;
+
+    @OneToMany(mappedBy = "pokemon")
+    @JsonIgnore
+    private Set<PokemonSpeciesVariant> speciesVariants;
 
     @Override
     public int getEntityId() {

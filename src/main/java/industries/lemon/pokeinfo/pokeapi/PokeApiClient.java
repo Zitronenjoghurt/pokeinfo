@@ -3,6 +3,7 @@ package industries.lemon.pokeinfo.pokeapi;
 import industries.lemon.pokeinfo.pokeapi.models.AbilityResponse;
 import industries.lemon.pokeinfo.pokeapi.models.GenerationResponse;
 import industries.lemon.pokeinfo.pokeapi.models.PokemonResponse;
+import industries.lemon.pokeinfo.pokeapi.models.PokemonSpeciesResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
@@ -47,5 +48,12 @@ public class PokeApiClient {
                 .uri("/generation/{id}", id)
                 .retrieve()
                 .bodyToMono(GenerationResponse.class);
+    }
+
+    public Mono<PokemonSpeciesResponse> getPokemonSpeciesById(int id) {
+        return webClient.get()
+                .uri("/pokemon-species/{id}", id)
+                .retrieve()
+                .bodyToMono(PokemonSpeciesResponse.class);
     }
 }

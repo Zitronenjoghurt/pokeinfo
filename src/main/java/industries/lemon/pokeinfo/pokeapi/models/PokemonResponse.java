@@ -1,5 +1,6 @@
 package industries.lemon.pokeinfo.pokeapi.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import industries.lemon.pokeinfo.entities.Pokemon;
@@ -15,6 +16,7 @@ public class PokemonResponse extends BaseEntityResponse {
     private String name;
     private int baseExperience;
     private int height;
+    @JsonProperty("is_default")
     private boolean isDefault;
     private int order;
     private int weight;

@@ -12,6 +12,7 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AbilityResponse extends BaseEntityResponse {
     private String name;
+    @JsonProperty("is_main_series")
     private Boolean isMainSeries;
     @JsonProperty("generation")
     private NamedApiResource originGeneration;

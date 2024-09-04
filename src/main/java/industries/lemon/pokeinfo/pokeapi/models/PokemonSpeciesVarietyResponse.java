@@ -9,9 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class AbilityPokemon {
-    @JsonProperty("is_hidden")
-    private boolean isHidden;
-    private int slot;
+public class PokemonSpeciesVarietyResponse {
+    @JsonProperty("is_default")
+    private boolean isDefault;
     private NamedApiResource pokemon;
 }

@@ -47,7 +47,7 @@ public class Pokemon extends BaseEntity {
     @JoinColumn(name = "pokemon_id")
     private Set<PokemonType> types;
 
-    // ToDo: forms, game indices, held items, location area encounters, moves, past types, cries, stats, types
+    // ToDo: forms, game indices, held items, location area encounters, moves, past types, cries
 
     @OneToMany(mappedBy = "pokemon")
     @JsonIgnore

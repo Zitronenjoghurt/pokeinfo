@@ -25,7 +25,6 @@ public class Generation extends BaseInitializableEntity<GenerationResponse> {
     @JoinTable
     private Set<LocalizedName> localizedNames = new HashSet<>();
 
-
     @Override
     public void applyResponse(GenerationResponse response) {}
 

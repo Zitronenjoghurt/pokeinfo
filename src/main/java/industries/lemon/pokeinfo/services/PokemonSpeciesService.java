@@ -16,14 +16,20 @@ import java.util.stream.Collectors;
 @Service
 public class PokemonSpeciesService extends BaseEntityService<PokemonSpecies, PokemonSpeciesRepository, PokemonSpeciesResponse> {
     private final PokemonService pokemonService;
+    private final LocalizedNameService localizedNameService;
+    private final GrowthRateService growthRateService;
 
     public PokemonSpeciesService(
             PokeApiClient pokeApiClient,
             PokemonSpeciesRepository repository,
-            PokemonService pokemonService
+            PokemonService pokemonService,
+            LocalizedNameService localizedNameService,
+            GrowthRateService growthRateService
     ) {
         super(pokeApiClient, repository);
         this.pokemonService = pokemonService;
+        this.localizedNameService = localizedNameService;
+        this.growthRateService = growthRateService;
     }
 
     @Override
@@ -39,8 +45,12 @@ public class PokemonSpeciesService extends BaseEntityService<PokemonSpecies, Pok
     @Override
     protected PokemonSpecies fromResponse(PokemonSpeciesResponse response) {
         Set<PokemonSpeciesVariant> variants = findOrCreateSpeciesVariants(response);
+        Set<LocalizedName> localizedNames = localizedNameService.createLocalizedNames(response.getNames());
+        GrowthRate growthRate = growthRateService.fetch(response.getGrowthRate().getId()).block();
         PokemonSpecies species = response.intoPokemonSpecies();
         species.setVariants(variants);
+        species.setLocalizedNames(localizedNames);
+        species.setGrowthRate(growthRate);
         return species;
     }
 

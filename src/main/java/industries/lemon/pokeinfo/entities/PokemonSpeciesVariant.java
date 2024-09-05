@@ -7,7 +7,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table
+@Table(name = "pokemon_species_variant")
 public class PokemonSpeciesVariant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

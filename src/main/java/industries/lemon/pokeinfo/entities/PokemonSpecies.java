@@ -59,7 +59,7 @@ public class PokemonSpecies extends BaseEntity {
     @JoinTable
     private Set<LocalizedName> localizedNames;
 
-    @OneToMany(mappedBy = "species", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "species", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<PokemonSpeciesVariant> variants;
 
     @Override

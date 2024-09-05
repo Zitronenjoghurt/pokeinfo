@@ -39,14 +39,14 @@ public class PokemonService extends BaseEntityService<Pokemon, PokemonRepository
     protected Pokemon fromResponse(PokemonResponse response) {
         PokemonSprites pokemonSprites = response.getSprites().intoPokemonSprites();
         Pokemon pokemon = response.intoPokemon();
-        pokemon.setPokemonAbilities(findOrCreateAbilities(response));
+        pokemon.setPokemonAbilities(findOrCreateAbilities(response, pokemon));
         pokemon.setSprites(pokemonSprites);
         pokemon.setStats(createStats(response.getStats()));
         pokemon.setTypes(createTypes(response.getTypes()));
         return pokemon;
     }
 
-    protected Set<PokemonAbility> findOrCreateAbilities(PokemonResponse response) {
+    protected Set<PokemonAbility> findOrCreateAbilities(PokemonResponse response, Pokemon pokemon) {
         List<PokemonAbilityResponse> pokemonAbilities = response.getAbilities();
         return pokemonAbilities.stream()
                 .map(pokemonAbilityResponse -> {
@@ -55,6 +55,7 @@ public class PokemonService extends BaseEntityService<Pokemon, PokemonRepository
                     pokemonAbility.setAbility(ability);
                     pokemonAbility.setSlot(pokemonAbilityResponse.getSlot());
                     pokemonAbility.setHidden(pokemonAbilityResponse.isHidden());
+                    pokemonAbility.setPokemon(pokemon);
                     return pokemonAbility;
                 })
                 .collect(Collectors.toSet());

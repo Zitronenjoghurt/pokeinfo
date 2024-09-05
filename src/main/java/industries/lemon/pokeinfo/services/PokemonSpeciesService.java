@@ -47,11 +47,11 @@ public class PokemonSpeciesService extends BaseEntityService<PokemonSpecies, Pok
 
     @Override
     protected PokemonSpecies fromResponse(PokemonSpeciesResponse response) {
-        Set<PokemonSpeciesVariant> variants = findOrCreateSpeciesVariants(response);
         Set<LocalizedName> localizedNames = localizedNameService.createLocalizedNames(response.getNames());
         GrowthRate growthRate = growthRateService.fetch(response.getGrowthRate().getId()).block();
         Generation generation =generationService.findByIdOrCreate(response.getGeneration().getId());
         PokemonSpecies species = response.intoPokemonSpecies();
+        Set<PokemonSpeciesVariant> variants = findOrCreateSpeciesVariants(response, species);
         species.setVariants(variants);
         species.setLocalizedNames(localizedNames);
         species.setGrowthRate(growthRate);
@@ -59,7 +59,7 @@ public class PokemonSpeciesService extends BaseEntityService<PokemonSpecies, Pok
         return species;
     }
 
-    protected Set<PokemonSpeciesVariant> findOrCreateSpeciesVariants(PokemonSpeciesResponse response) {
+    protected Set<PokemonSpeciesVariant> findOrCreateSpeciesVariants(PokemonSpeciesResponse response, PokemonSpecies species) {
         List<PokemonSpeciesVarietyResponse> pokemonSpeciesVarietyResponses = response.getVarieties();
         return pokemonSpeciesVarietyResponses.stream()
                 .map(pokemonSpeciesVarietyResponse -> {
@@ -68,6 +68,7 @@ public class PokemonSpeciesService extends BaseEntityService<PokemonSpecies, Pok
                     PokemonSpeciesVariant pokemonSpeciesVariant = new PokemonSpeciesVariant();
                     pokemonSpeciesVariant.setPokemon(pokemon);
                     pokemonSpeciesVariant.setDefault(pokemonSpeciesVarietyResponse.isDefault());
+                    pokemonSpeciesVariant.setSpecies(species);
                     return pokemonSpeciesVariant;
                 })
                 .collect(Collectors.toSet());

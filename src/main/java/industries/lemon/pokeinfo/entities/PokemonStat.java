@@ -7,7 +7,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table
+@Table(name = "pokemon_stat")
 public class PokemonStat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

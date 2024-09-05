@@ -33,7 +33,7 @@ public class Pokemon extends BaseEntity {
     @Column(updatable = false, nullable = false)
     private int weight;
 
-    @OneToMany(mappedBy = "pokemon", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pokemon", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<PokemonAbility> pokemonAbilities;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
@@ -49,7 +49,7 @@ public class Pokemon extends BaseEntity {
 
     // ToDo: forms, game indices, held items, location area encounters, moves, past types, cries, stats, types
 
-    @OneToMany(mappedBy = "pokemon", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pokemon")
     @JsonIgnore
     private Set<PokemonSpeciesVariant> speciesVariants;
 

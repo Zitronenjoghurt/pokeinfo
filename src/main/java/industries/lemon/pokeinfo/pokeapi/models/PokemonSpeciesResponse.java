@@ -27,15 +27,15 @@ public class PokemonSpeciesResponse extends BaseEntityResponse {
     private int hatchCounter;
     private boolean hasGenderDifferences;
     private boolean formsSwitchable;
-    private NamedApiResource growthRate;
-    private List<PokemonSpeciesDexEntry> pokedexNumbers;
-    private List<NamedApiResource> eggGroups;
-    private NamedApiResource color;
-    private NamedApiResource shape;
-    private NamedApiResource evolvesFromSpecies;
-    private NamedApiResource evolutionChain;
-    private NamedApiResource habitat;
-    private NamedApiResource generation;
+    private NamedApiResourceResponse growthRate;
+    private List<PokemonSpeciesDexEntryResponse> pokedexNumbers;
+    private List<NamedApiResourceResponse> eggGroups;
+    private NamedApiResourceResponse color;
+    private NamedApiResourceResponse shape;
+    private NamedApiResourceResponse evolvesFromSpecies;
+    private NamedApiResourceResponse evolutionChain;
+    private NamedApiResourceResponse habitat;
+    private NamedApiResourceResponse generation;
     private List<LocalizedNameResponse> names;
     // ToDo: palParkEncounters
     private List<FlavorTextResponse> flavorTextEntries;

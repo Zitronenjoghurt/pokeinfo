@@ -51,11 +51,15 @@ public class PokemonSpecies extends BaseEntity {
     @JoinColumn(name = "growth_rate_id")
     private GrowthRate growthRate;
 
+    @ManyToOne
+    @JoinColumn(name = "generation_id")
+    private Generation generation;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinTable
     private Set<LocalizedName> localizedNames;
 
-    @OneToMany(mappedBy = "species", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "species", fetch = FetchType.EAGER)
     private Set<PokemonSpeciesVariant> variants;
 
     @Override

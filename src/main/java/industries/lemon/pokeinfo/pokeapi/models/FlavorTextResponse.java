@@ -11,5 +11,5 @@ import lombok.Setter;
 public class FlavorTextResponse {
     private String flavorText;
     private LanguageResponse language;
-    private NamedApiResource version;
+    private NamedApiResourceResponse version;
 }

@@ -15,5 +15,5 @@ public class GrowthRateResponse extends BaseEntityResponse {
     private String formula;
     private List<DescriptionResponse> descriptions;
     private List<GrowthRateExperienceLevelResponse> levels;
-    private List<NamedApiResource> pokemon_species;
+    private List<NamedApiResourceResponse> pokemon_species;
 }

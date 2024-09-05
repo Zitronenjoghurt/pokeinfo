@@ -8,7 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class PokemonSpeciesDexEntry {
-    private int entryNumber;
-    private NamedApiResource pokedex;
+public class AbilityFlavorTextResponse {
+    private String flavorText;
+    private LanguageResponse language;
+    private NamedApiResourceResponse versionGroup;
 }

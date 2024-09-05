@@ -14,9 +14,9 @@ public class GenerationResponse extends BaseEntityResponse {
     private int id;
     private String name;
     private List<LocalizedNameResponse> names;
-    private NamedApiResource mainRegion;
-    private List<NamedApiResource> moves;
-    private List<NamedApiResource> pokemonSpecies;
-    private List<NamedApiResource> types;
-    private List<NamedApiResource> versionGroups;
+    private NamedApiResourceResponse mainRegion;
+    private List<NamedApiResourceResponse> moves;
+    private List<NamedApiResourceResponse> pokemonSpecies;
+    private List<NamedApiResourceResponse> types;
+    private List<NamedApiResourceResponse> versionGroups;
 }

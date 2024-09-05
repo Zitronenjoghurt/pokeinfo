@@ -15,10 +15,10 @@ public class AbilityResponse extends BaseEntityResponse {
     @JsonProperty("is_main_series")
     private Boolean isMainSeries;
     @JsonProperty("generation")
-    private NamedApiResource originGeneration;
+    private NamedApiResourceResponse originGeneration;
     private List<LocalizedNameResponse> names;
     private List<VerboseEffectResponse> effectEntries;
-    private List<AbilityEffectChange> effectChanges; // ToDo
-    private List<AbilityFlavorText> flavorTextEntries;
-    private List<AbilityPokemon> pokemon; // Todo (probably not)
+    private List<AbilityEffectChangeResponse> effectChanges; // ToDo
+    private List<AbilityFlavorTextResponse> flavorTextEntries;
+    private List<AbilityPokemonResponse> pokemon; // Todo (probably not)
 }

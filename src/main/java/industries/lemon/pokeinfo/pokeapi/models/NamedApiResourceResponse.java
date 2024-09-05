@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class NamedApiResource {
+public class NamedApiResourceResponse {
     private String name;
     private String url;
 

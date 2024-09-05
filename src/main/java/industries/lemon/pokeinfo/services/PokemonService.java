@@ -1,11 +1,8 @@
 package industries.lemon.pokeinfo.services;
 
-import industries.lemon.pokeinfo.entities.Ability;
-import industries.lemon.pokeinfo.entities.Pokemon;
-import industries.lemon.pokeinfo.entities.PokemonAbility;
+import industries.lemon.pokeinfo.entities.*;
 import industries.lemon.pokeinfo.pokeapi.PokeApiClient;
-import industries.lemon.pokeinfo.pokeapi.models.PokemonAbilityResponse;
-import industries.lemon.pokeinfo.pokeapi.models.PokemonResponse;
+import industries.lemon.pokeinfo.pokeapi.models.*;
 import industries.lemon.pokeinfo.repositories.PokemonRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -40,8 +37,12 @@ public class PokemonService extends BaseEntityService<Pokemon, PokemonRepository
 
     @Override
     protected Pokemon fromResponse(PokemonResponse response) {
+        PokemonSprites pokemonSprites = response.getSprites().intoPokemonSprites();
         Pokemon pokemon = response.intoPokemon();
         pokemon.setPokemonAbilities(findOrCreateAbilities(response));
+        pokemon.setSprites(pokemonSprites);
+        pokemon.setStats(createStats(response.getStats()));
+        pokemon.setTypes(createTypes(response.getTypes()));
         return pokemon;
     }
 
@@ -56,6 +57,18 @@ public class PokemonService extends BaseEntityService<Pokemon, PokemonRepository
                     pokemonAbility.setHidden(pokemonAbilityResponse.isHidden());
                     return pokemonAbility;
                 })
+                .collect(Collectors.toSet());
+    }
+
+    protected Set<PokemonStat> createStats(List<PokemonStatResponse> pokemonStatResponses) {
+        return pokemonStatResponses.stream()
+                .map(PokemonStatResponse::intoPokemonStat)
+                .collect(Collectors.toSet());
+    }
+
+    protected Set<PokemonType> createTypes(List<PokemonTypeResponse> pokemonTypeResponses) {
+        return pokemonTypeResponses.stream()
+                .map(PokemonTypeResponse::intoPokemonType)
                 .collect(Collectors.toSet());
     }
 }

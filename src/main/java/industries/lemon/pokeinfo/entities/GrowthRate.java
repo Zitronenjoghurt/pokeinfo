@@ -26,7 +26,6 @@ public class GrowthRate extends BaseEntity {
     private Set<LocalizedDescription> localizedDescriptions;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JoinTable
     private Set<GrowthRateExperienceLevel> levels;
 
     @OneToMany(mappedBy = "growthRate", fetch = FetchType.LAZY)

@@ -15,21 +15,24 @@ import java.util.stream.Collectors;
 
 @Service
 public class PokemonSpeciesService extends BaseEntityService<PokemonSpecies, PokemonSpeciesRepository, PokemonSpeciesResponse> {
-    private final PokemonService pokemonService;
-    private final LocalizedNameService localizedNameService;
+    private final GenerationService generationService;
     private final GrowthRateService growthRateService;
+    private final LocalizedNameService localizedNameService;
+    private final PokemonService pokemonService;
 
     public PokemonSpeciesService(
             PokeApiClient pokeApiClient,
             PokemonSpeciesRepository repository,
-            PokemonService pokemonService,
+            GenerationService generationService,
+            GrowthRateService growthRateService,
             LocalizedNameService localizedNameService,
-            GrowthRateService growthRateService
+            PokemonService pokemonService
     ) {
         super(pokeApiClient, repository);
-        this.pokemonService = pokemonService;
-        this.localizedNameService = localizedNameService;
+        this.generationService = generationService;
         this.growthRateService = growthRateService;
+        this.localizedNameService = localizedNameService;
+        this.pokemonService = pokemonService;
     }
 
     @Override
@@ -47,10 +50,12 @@ public class PokemonSpeciesService extends BaseEntityService<PokemonSpecies, Pok
         Set<PokemonSpeciesVariant> variants = findOrCreateSpeciesVariants(response);
         Set<LocalizedName> localizedNames = localizedNameService.createLocalizedNames(response.getNames());
         GrowthRate growthRate = growthRateService.fetch(response.getGrowthRate().getId()).block();
+        Generation generation =generationService.findByIdOrCreate(response.getGeneration().getId());
         PokemonSpecies species = response.intoPokemonSpecies();
         species.setVariants(variants);
         species.setLocalizedNames(localizedNames);
         species.setGrowthRate(growthRate);
+        species.setGeneration(generation);
         return species;
     }
 

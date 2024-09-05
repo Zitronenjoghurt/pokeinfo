@@ -21,6 +21,10 @@ public class Generation extends BaseInitializableEntity<GenerationResponse> {
     @JsonIgnore
     private Set<Ability> abilities = new HashSet<>();
 
+    @OneToMany(mappedBy = "generation")
+    @JsonIgnore
+    private Set<PokemonSpecies> species = new HashSet<>();
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinTable
     private Set<LocalizedName> localizedNames = new HashSet<>();

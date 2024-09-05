@@ -61,6 +61,7 @@ public class PokemonView extends VerticalLayout {
 
         pokemonSpeciesService.fetch(speciesId).subscribe(
                 species -> {
+                    Integer a = 1;
                     // Visualize pokemon species
                 },
                 error -> {}

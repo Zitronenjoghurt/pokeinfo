@@ -36,7 +36,20 @@ public class Pokemon extends BaseEntity {
     @OneToMany(mappedBy = "pokemon", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PokemonAbility> pokemonAbilities;
 
-    @OneToMany(mappedBy = "pokemon")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private PokemonSprites sprites;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "pokemon_id")
+    private Set<PokemonStat> stats;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "pokemon_id")
+    private Set<PokemonType> types;
+
+    // ToDo: forms, game indices, held items, location area encounters, moves, past types, cries, stats, types
+
+    @OneToMany(mappedBy = "pokemon", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<PokemonSpeciesVariant> speciesVariants;
 

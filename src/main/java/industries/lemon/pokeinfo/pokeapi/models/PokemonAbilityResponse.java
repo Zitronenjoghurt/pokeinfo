@@ -11,7 +11,7 @@ import lombok.Setter;
 public class PokemonAbilityResponse {
     private boolean isHidden;
     private int slot;
-    private NamedApiResource ability;
+    private NamedApiResourceResponse ability;
 
     public String getName() {
         return ability.getName();

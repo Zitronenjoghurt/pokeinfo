@@ -21,6 +21,10 @@ public class PokemonResponse extends BaseEntityResponse {
     private int order;
     private int weight;
     private List<PokemonAbilityResponse> abilities;
+    private List<NamedApiResourceResponse> forms;
+    private PokemonSpritesResponse sprites;
+    private List<PokemonStatResponse> stats;
+    private List<PokemonTypeResponse> types;
 
     public Pokemon intoPokemon() {
         Pokemon pokemon = new Pokemon();

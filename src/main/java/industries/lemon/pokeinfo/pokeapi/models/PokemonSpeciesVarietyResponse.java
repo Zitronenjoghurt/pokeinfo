@@ -12,5 +12,5 @@ import lombok.Setter;
 public class PokemonSpeciesVarietyResponse {
     @JsonProperty("is_default")
     private boolean isDefault;
-    private NamedApiResource pokemon;
+    private NamedApiResourceResponse pokemon;
 }

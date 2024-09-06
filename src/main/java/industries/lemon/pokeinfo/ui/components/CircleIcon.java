@@ -1,16 +1,12 @@
 package industries.lemon.pokeinfo.ui.components;
 
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
-import com.vaadin.flow.server.StreamResource;
-
-import java.io.InputStream;
 
 public class CircleIcon extends FlexLayout {
     private final Div circle;
-    private final Image icon;
+    private final CustomIcon icon;
 
     public CircleIcon(
             String iconName,
@@ -18,7 +14,7 @@ public class CircleIcon extends FlexLayout {
             int size
     ) {
         circle = new Div();
-        icon = new Image(createResource(iconName), "icon");
+        icon = new CustomIcon(iconName, size);
 
         setFlexWrap(FlexWrap.WRAP);
         setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
@@ -40,15 +36,5 @@ public class CircleIcon extends FlexLayout {
 
         circle.add(icon);
         add(circle);
-    }
-
-    private StreamResource createResource(String iconName) {
-        return new StreamResource(iconName, () -> {
-            InputStream inputStream = getClass().getResourceAsStream("/static/icons/" + iconName);
-            if (inputStream == null) {
-                throw new RuntimeException("Icon not found: " + iconName);
-            }
-            return inputStream;
-        });
     }
 }

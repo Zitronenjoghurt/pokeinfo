@@ -12,14 +12,16 @@ import java.util.List;
 import java.util.Set;
 
 public class PokemonContainer extends VerticalLayout {
-    private HorizontalLayout typeLabels;
-    private PokemonStatsContainer statsContainer;
+    private final HorizontalLayout typeLabels;
+    private final PokemonStatsContainer statsContainer;
 
     public PokemonContainer() {
+        setAlignItems(Alignment.CENTER);
+
         getStyle()
-                .set("border-radius", "var(--lumo-border-radius-l)")
-                .set("background-color", "var(--lumo-contrast-5pct)")
-                .set("box-shadow", "0 4px 8px rgba(0,0,0,0.2)");
+                .set("border-radius", "var(--lumo-border-radius-l)");
+                //.set("background-color", "var(--lumo-contrast-5pct)")
+                //.set("box-shadow", "0 4px 8px rgba(0,0,0,0.2)");
 
         this.typeLabels = new HorizontalLayout();
         this.statsContainer = new PokemonStatsContainer();
@@ -41,5 +43,17 @@ public class PokemonContainer extends VerticalLayout {
             PokemonTyping typing = PokemonTyping.fromName(type.getType());
             typeLabels.add(new PokemonTypeLabel(typing));
         }
+
+        if (sortedTypes.size() == 1) {
+            typeLabels.add(new PokemonTypeLabel(null));
+        }
+    }
+
+    public void show() {
+        setVisible(true);
+    }
+
+    public void hide() {
+        setVisible(false);
     }
 }

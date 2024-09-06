@@ -13,7 +13,7 @@ public class PokemonTypeIcon extends CircleIcon {
     }
 
     public static PokemonTypeIcon fromType(PokemonTyping type, int size) {
-        String iconName = type.name().toLowerCase() + ".svg";
+        String iconName = type.name().toLowerCase();
         String backgroundColor = type.getDisplayColor();
         PokemonTypeIcon icon = new PokemonTypeIcon(iconName, backgroundColor, size);
 

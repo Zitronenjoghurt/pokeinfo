@@ -7,12 +7,6 @@ import industries.lemon.pokeinfo.enums.PokemonTyping;
 public class PokemonTypeLabel extends HorizontalLayout {
 
     public PokemonTypeLabel(PokemonTyping type) {
-        PokemonTypeIcon icon = PokemonTypeIcon.fromType(type, 30);
-        Span typeText = new Span(type.getDisplayName());
-        typeText.getStyle().set("font-size", "16px");
-
-        add(icon, typeText);
-
         setAlignItems(Alignment.CENTER);
         setPadding(true);
 
@@ -24,5 +18,13 @@ public class PokemonTypeLabel extends HorizontalLayout {
                 .set("font-weight", "bold");
 
         setWidth("140px");
+
+        if (type != null) {
+            PokemonTypeIcon icon = PokemonTypeIcon.fromType(type, 30);
+            Span typeText = new Span(type.getDisplayName());
+            typeText.getStyle().set("font-size", "16px");
+
+            add(icon, typeText);
+        }
     }
 }

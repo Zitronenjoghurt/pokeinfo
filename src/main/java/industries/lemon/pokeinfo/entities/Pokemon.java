@@ -55,9 +55,17 @@ public class Pokemon extends BaseEntity {
     private Set<PokemonSpeciesVariant> speciesVariants;
 
     public Optional<PokemonStat> getStatByName(String name) {
-        return stats.stream()
+        return getStats().stream()
                 .filter(stat -> stat.getName().equalsIgnoreCase(name))
                 .findFirst();
+    }
+
+    public int getBaseStatTotal() {
+        int total = 0;
+        for (PokemonStat stat : getStats()) {
+            total += stat.getBaseStat();
+        }
+        return total;
     }
 
     @Override

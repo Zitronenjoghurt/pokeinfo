@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -69,12 +70,11 @@ public class PokemonSpecies extends BaseEntity {
         return String.format("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/%s.png", getSpeciesId());
     }
 
-    public Pokemon getDefaultVariant() {
+    public Optional<Pokemon> getDefaultVariant() {
         return variants.stream()
                 .filter(PokemonSpeciesVariant::isDefault)
                 .findFirst()
-                .orElse(null)
-                .getPokemon();
+                .map(PokemonSpeciesVariant::getPokemon);
     }
 
     @Override

@@ -17,11 +17,11 @@ public class PokemonView extends VerticalLayout {
     private final ComboBox<Integer> languageSelector;
     private final ComboBox<String> nameSearchBar;
     private final IntegerField dexNumberSearchBar;
-    private SpeciesContainer speciesContainer;
+    private final SpeciesContainer speciesContainer;
 
     private boolean initialized = false;
     private boolean loading = false;
-    private int currentSpeciesId = 1;
+    private int currentSpeciesId;
 
     private static final int MAX_POKEDEX_NUMBER = 1025;
 
@@ -92,17 +92,16 @@ public class PokemonView extends VerticalLayout {
 
         setIsLoading(true);
         pokemonSpeciesService.fetch(speciesId).doOnNext(
-                species -> {
-                    getUI().ifPresent(ui -> ui.access(() -> {
-                        this.speciesContainer.update(species);
-                        this.speciesContainer.setVisible(true);
-                        ui.push();
-                        currentSpeciesId = speciesId;
-                        initialized = true;
-                        setIsLoading(false);
-                    }));
-                }
-        ).doOnError(throwable -> {
+                species -> getUI().ifPresent(ui -> ui.access(() -> {
+                    this.speciesContainer.update(species);
+                    this.speciesContainer.setVisible(true);
+                    ui.push();
+                    currentSpeciesId = speciesId;
+                    initialized = true;
+                    setIsLoading(false);
+                }))
+        ).doOnError(e -> {
+            initialized = true;
             setIsLoading(false);
         }).subscribe();
 

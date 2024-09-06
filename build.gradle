@@ -62,7 +62,7 @@ dependencyManagement {
 }
 
 vaadin {
-    productionMode = false
+    productionMode = true
 }
 
 tasks.named('test') {

@@ -1,12 +1,18 @@
 package industries.lemon.pokeinfo.ui.components;
 
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import industries.lemon.pokeinfo.entities.Pokemon;
 import industries.lemon.pokeinfo.entities.PokemonSpecies;
 
+import java.util.Optional;
+
 public class SpeciesContainer extends VerticalLayout {
-    private ArtworkContainer artwork;
-    private PokemonContainer defaultContainer;
+    private final ArtworkContainer artwork;
+    private final PokemonContainer defaultContainer;
+    private final IconLabeledField captureRateField;
+    private final IconLabeledField baseHappinessField;
+    private final IconLabeledField growthRateField;
 
     public SpeciesContainer() {
         getStyle()
@@ -20,19 +26,31 @@ public class SpeciesContainer extends VerticalLayout {
         setHeight("auto");
 
         this.artwork = new ArtworkContainer();
+        this.captureRateField = new IconLabeledField("Catch Rate", "pokeball", "", 18);
+        this.baseHappinessField = new IconLabeledField("Base Happiness", "happy", "", 18);
+        this.growthRateField = new IconLabeledField("Growth Rate", "growth", "", 18);
         this.defaultContainer = new PokemonContainer();
 
-        add(artwork, defaultContainer);
+        VerticalLayout basicInfo = new VerticalLayout(captureRateField, baseHappinessField, growthRateField);
+        HorizontalLayout topLine = new HorizontalLayout(artwork, basicInfo);
+        add(topLine, defaultContainer);
     }
 
     public void update(PokemonSpecies species) {
         String artworkUrl = species.getOfficialArtworkUrl(false);
         String alt = String.format("The official artwork of %s", species.getName());
         this.artwork.update(artworkUrl, alt);
+        this.captureRateField.setValue(String.valueOf(species.getCaptureRate()));
+        this.baseHappinessField.setValue(String.valueOf(species.getBaseHappiness()));
+        this.growthRateField.setValue(species.getGrowthRate().getName());
 
-        Pokemon defaultPokemon = species.getDefaultVariant();
-        if (defaultPokemon != null) {
-            this.defaultContainer.update(defaultPokemon);
-        }
+        Optional<Pokemon> defaultPokemon = species.getDefaultVariant();
+        defaultPokemon.ifPresentOrElse(
+                pokemon -> {
+                    this.defaultContainer.update(pokemon);
+                    this.defaultContainer.show();
+                },
+                this.defaultContainer::hide
+        );
     }
 }

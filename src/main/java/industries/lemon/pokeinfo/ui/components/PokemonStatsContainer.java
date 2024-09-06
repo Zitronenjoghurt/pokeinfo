@@ -1,5 +1,6 @@
 package industries.lemon.pokeinfo.ui.components;
 
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import industries.lemon.pokeinfo.entities.Pokemon;
 import industries.lemon.pokeinfo.entities.PokemonStat;
@@ -10,17 +11,19 @@ import java.util.Optional;
 public class PokemonStatsContainer extends VerticalLayout {
 
     private static final int MAX_STAT_VALUE = 255;
-    private LabeledProgressBar hpBar;
-    private LabeledProgressBar attackBar;
-    private LabeledProgressBar defenseBar;
-    private LabeledProgressBar specialAttackBar;
-    private LabeledProgressBar specialDefenseBar;
-    private LabeledProgressBar speedBar;
+    private final LabeledProgressBar hpBar;
+    private final LabeledProgressBar attackBar;
+    private final LabeledProgressBar defenseBar;
+    private final LabeledProgressBar specialAttackBar;
+    private final LabeledProgressBar specialDefenseBar;
+    private final LabeledProgressBar speedBar;
+    private final Span baseStatTotal;
 
     public PokemonStatsContainer() {
         setSpacing(false);
         setPadding(false);
         setMargin(false);
+        setAlignItems(Alignment.CENTER);
 
         getStyle().set("padding", "10px")
                 .set("gap", "1px")
@@ -29,6 +32,12 @@ public class PokemonStatsContainer extends VerticalLayout {
                 .set("border-radius", "4px")
                 .set("background-color", "var(--lumo-contrast-5pct)");
 
+        Span title = new Span("Base Stats");
+        title.getStyle().set("font-weight", "bold");
+
+        this.baseStatTotal = new Span();
+        this.baseStatTotal.getStyle().set("font-weight", "bold");
+
         this.hpBar             = createStatBar("Hp", PokemonStatValue.HP.getColor());
         this.attackBar         = createStatBar("Atk", PokemonStatValue.ATK.getColor());
         this.defenseBar        = createStatBar("Def", PokemonStatValue.DEF.getColor());
@@ -36,11 +45,11 @@ public class PokemonStatsContainer extends VerticalLayout {
         this.specialDefenseBar = createStatBar("SpDef", PokemonStatValue.SPDEF.getColor());
         this.speedBar          = createStatBar("Speed", PokemonStatValue.SPEED.getColor());
 
-        add(hpBar, attackBar, defenseBar, specialAttackBar, specialDefenseBar, speedBar);
+        add(title, hpBar, attackBar, defenseBar, specialAttackBar, specialDefenseBar, speedBar, baseStatTotal);
     }
 
     private LabeledProgressBar createStatBar(String statName, String color) {
-        return new LabeledProgressBar(0, MAX_STAT_VALUE, statName, color, 14, 10);
+        return new LabeledProgressBar(0, MAX_STAT_VALUE, statName, color, 14, 12);
     }
 
     public void update(Pokemon pokemon) {
@@ -57,5 +66,7 @@ public class PokemonStatsContainer extends VerticalLayout {
         specialAttack.ifPresent(stat -> this.specialAttackBar.setProgress(stat.getBaseStat()));
         specialDefense.ifPresent(stat -> this.specialDefenseBar.setProgress(stat.getBaseStat()));
         speed.ifPresent(stat -> this.speedBar.setProgress(stat.getBaseStat()));
+
+        this.baseStatTotal.setText("Total: "+pokemon.getBaseStatTotal());
     }
 }

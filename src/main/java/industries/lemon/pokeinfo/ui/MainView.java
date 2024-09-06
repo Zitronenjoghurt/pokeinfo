@@ -74,6 +74,6 @@ public class MainView extends AppLayout {
 
     private void showPokemonContent() {
         contentLayout.removeAll();
-        contentLayout.add(new PokemonView(pokemonNameService, pokemonSpeciesService));
+        contentLayout.add(new PokemonView(pokemonNameService, pokemonSpeciesService, 1));
     }
 }

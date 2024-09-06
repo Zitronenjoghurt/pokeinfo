@@ -18,7 +18,7 @@ public class GrowthRate extends BaseEntity {
     @Column(updatable = false, nullable = false)
     private String name;
 
-    @Column(updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false, length = 512)
     private String formula;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)

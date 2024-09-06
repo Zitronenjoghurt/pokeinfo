@@ -69,6 +69,14 @@ public class PokemonSpecies extends BaseEntity {
         return String.format("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/%s.png", getSpeciesId());
     }
 
+    public Pokemon getDefaultVariant() {
+        return variants.stream()
+                .filter(PokemonSpeciesVariant::isDefault)
+                .findFirst()
+                .orElse(null)
+                .getPokemon();
+    }
+
     @Override
     public int getEntityId() {
         return getSpeciesId();

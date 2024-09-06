@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -52,6 +53,12 @@ public class Pokemon extends BaseEntity {
     @OneToMany(mappedBy = "pokemon")
     @JsonIgnore
     private Set<PokemonSpeciesVariant> speciesVariants;
+
+    public Optional<PokemonStat> getStatByName(String name) {
+        return stats.stream()
+                .filter(stat -> stat.getName().equalsIgnoreCase(name))
+                .findFirst();
+    }
 
     @Override
     public int getEntityId() {

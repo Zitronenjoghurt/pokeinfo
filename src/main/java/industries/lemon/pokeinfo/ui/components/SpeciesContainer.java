@@ -1,10 +1,12 @@
 package industries.lemon.pokeinfo.ui.components;
 
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import industries.lemon.pokeinfo.entities.Pokemon;
 import industries.lemon.pokeinfo.entities.PokemonSpecies;
 
 public class SpeciesContainer extends VerticalLayout {
     private ArtworkContainer artwork;
+    private PokemonContainer defaultContainer;
 
     public SpeciesContainer() {
         getStyle()
@@ -18,13 +20,19 @@ public class SpeciesContainer extends VerticalLayout {
         setHeight("auto");
 
         this.artwork = new ArtworkContainer();
+        this.defaultContainer = new PokemonContainer();
 
-        add(artwork);
+        add(artwork, defaultContainer);
     }
 
     public void update(PokemonSpecies species) {
         String artworkUrl = species.getOfficialArtworkUrl(false);
         String alt = String.format("The official artwork of %s", species.getName());
         this.artwork.update(artworkUrl, alt);
+
+        Pokemon defaultPokemon = species.getDefaultVariant();
+        if (defaultPokemon != null) {
+            this.defaultContainer.update(defaultPokemon);
+        }
     }
 }

@@ -17,7 +17,7 @@ public class PokemonSpeciesVariant {
     @JoinColumn(name = "species_id")
     private PokemonSpecies species;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "pokemon_id")
     private Pokemon pokemon;
 

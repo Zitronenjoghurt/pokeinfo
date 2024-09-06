@@ -2,6 +2,10 @@ package industries.lemon.pokeinfo.enums;
 
 import lombok.Getter;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @Getter
 public enum PokemonTyping {
     NORMAL(
@@ -86,5 +90,12 @@ public enum PokemonTyping {
     ) {
         this.displayName = displayName;
         this.displayColor = displayColor;
+    }
+
+    private static final Map<String, PokemonTyping> NAME_MAP = Stream.of(values())
+            .collect(Collectors.toMap(type -> type.getDisplayName().toLowerCase(), type -> type));
+
+    public static PokemonTyping fromName(String name) {
+        return NAME_MAP.get(name.toLowerCase());
     }
 }

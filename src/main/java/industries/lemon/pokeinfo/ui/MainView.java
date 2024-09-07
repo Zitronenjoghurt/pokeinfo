@@ -7,37 +7,42 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+import industries.lemon.pokeinfo.Constants;
 import industries.lemon.pokeinfo.services.PokemonNameService;
 import industries.lemon.pokeinfo.services.PokemonSpeciesService;
 import industries.lemon.pokeinfo.ui.tabs.PokemonView;
 
+import java.util.List;
+
 @Route("")
 @PageTitle("Test")
+@RouteAlias(value = "pokemon")
+@RouteAlias(value = "pokemon/:nationalDex")
 @AnonymousAllowed
-public class MainView extends AppLayout {
-    private final PokemonNameService pokemonNameService;
-    private final PokemonSpeciesService pokemonSpeciesService;
+public class MainView extends AppLayout implements BeforeEnterObserver {
     private final VerticalLayout contentLayout;
+    private final Tabs tabs;
+    private Tab homeTab;
+    private Tab pokemonTab;
+
+    private final PokemonView pokemonView;
 
     public MainView(
             PokemonNameService pokemonNameService,
             PokemonSpeciesService pokemonSpeciesService
     ) {
-        this.pokemonNameService = pokemonNameService;
-        this.pokemonSpeciesService = pokemonSpeciesService;
-
         DrawerToggle toggle = new DrawerToggle();
         H1 title = new H1("Poke-Info");
         title.getStyle()
                 .set("font-size", "var(--lumo-font-size-l)")
                 .set("margin", "0");
 
-        Tabs nav = createNavigation();
+        this.pokemonView = new PokemonView(pokemonNameService, pokemonSpeciesService);
+        this.tabs = createNavigation();
 
-        addToDrawer(nav);
+        addToDrawer(tabs);
         addToNavbar(toggle, title);
 
         contentLayout = new VerticalLayout();
@@ -46,12 +51,11 @@ public class MainView extends AppLayout {
         contentLayout.setAlignItems(FlexComponent.Alignment.CENTER);
 
         setContent(contentLayout);
-        showWelcomeContent();
     }
 
     private Tabs createNavigation() {
-        Tab homeTab = new Tab("Home");
-        Tab pokemonTab = new Tab("Pokemon");
+        this.homeTab = new Tab("Home");
+        this.pokemonTab = new Tab("Pokemon");
 
         Tabs tabs = new Tabs(homeTab, pokemonTab);
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
@@ -74,6 +78,44 @@ public class MainView extends AppLayout {
 
     private void showPokemonContent() {
         contentLayout.removeAll();
-        contentLayout.add(new PokemonView(pokemonNameService, pokemonSpeciesService, 1));
+        contentLayout.add(pokemonView);
+    }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        List<String> segments = event.getLocation().getSegments();
+        if (segments.isEmpty()) {
+            return;
+        }
+
+        if (segments.getFirst().isEmpty()) {
+            showWelcomeContent();
+            return;
+        }
+
+        if (segments.getFirst().equals("pokemon")) {
+            routePokemon(segments);
+        }
+    }
+
+    private void routePokemon(List<String> segments) {
+        tabs.setSelectedTab(pokemonTab);
+        if (segments.size() == 1) {
+            showPokemonContent();
+            return;
+        }
+
+        int speciesId = parseSpeciesId(segments.get(1));
+        showPokemonContent();
+        pokemonView.search(speciesId);
+    }
+
+    private int parseSpeciesId(String idString) {
+        try {
+            int id = Integer.parseInt(idString);
+            return (id > 0 && id <= Constants.MAX_SPECIES_ID) ? id : 1;
+        } catch (NumberFormatException e) {
+            return 1;
+        }
     }
 }

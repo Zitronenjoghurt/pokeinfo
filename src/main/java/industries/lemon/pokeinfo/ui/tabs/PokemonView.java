@@ -4,6 +4,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
+import industries.lemon.pokeinfo.Constants;
 import industries.lemon.pokeinfo.services.PokemonNameService;
 import industries.lemon.pokeinfo.services.PokemonSpeciesService;
 import industries.lemon.pokeinfo.ui.components.SpeciesContainer;
@@ -21,9 +22,7 @@ public class PokemonView extends VerticalLayout {
 
     private boolean initialized = false;
     private boolean loading = false;
-    private int currentSpeciesId;
-
-    private static final int MAX_POKEDEX_NUMBER = 1025;
+    private int currentSpeciesId = 1;
 
     private static final Map<Integer, String> LANGUAGE_FLAGS = Map.of(
             5, "🇫🇷",  // French
@@ -35,12 +34,10 @@ public class PokemonView extends VerticalLayout {
 
     public PokemonView(
             PokemonNameService pokemonNameService,
-            PokemonSpeciesService pokemonSpeciesService,
-            int initialSpeciesId
+            PokemonSpeciesService pokemonSpeciesService
     ) {
         this.pokemonNameService = pokemonNameService;
         this.pokemonSpeciesService = pokemonSpeciesService;
-        this.currentSpeciesId = initialSpeciesId;
 
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.START);
@@ -83,8 +80,8 @@ public class PokemonView extends VerticalLayout {
         search(speciesId);
     }
 
-    private void search(int speciesId) {
-        boolean speciesIdOutOfBounds = speciesId < 1 || speciesId > MAX_POKEDEX_NUMBER;
+    public void search(int speciesId) {
+        boolean speciesIdOutOfBounds = speciesId < 1 || speciesId > Constants.MAX_SPECIES_ID;
         boolean redundantSearch = speciesId == currentSpeciesId && initialized;
         if (isLoading() || speciesIdOutOfBounds || redundantSearch ) {
             return;
@@ -117,9 +114,9 @@ public class PokemonView extends VerticalLayout {
 
     private IntegerField createDexNumberSearchBar() {
         IntegerField searchBar = new IntegerField("National Dex");
-        searchBar.setHelperText("Up to " + MAX_POKEDEX_NUMBER);
+        searchBar.setHelperText("Up to " + Constants.MAX_SPECIES_ID);
         searchBar.setMin(1);
-        searchBar.setMax(MAX_POKEDEX_NUMBER);
+        searchBar.setMax(Constants.MAX_SPECIES_ID);
         searchBar.setStepButtonsVisible(true);
         searchBar.addValueChangeListener(e -> searchDexNumber());
         return searchBar;
@@ -139,7 +136,9 @@ public class PokemonView extends VerticalLayout {
         languageSelector.getElement().setAttribute("aria-label", "Select Language");
         languageSelector.addValueChangeListener(event -> {
             updateSearchBar(event.getValue());
-            nameSearchBar.setValue(getSpeciesNameById(currentSpeciesId));
+            if (initialized) {
+                nameSearchBar.setValue(getSpeciesNameById(currentSpeciesId));
+            }
         });
         return languageSelector;
     }

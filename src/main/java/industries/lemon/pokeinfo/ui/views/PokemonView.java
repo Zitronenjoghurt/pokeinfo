@@ -1,18 +1,27 @@
-package industries.lemon.pokeinfo.ui.tabs;
+package industries.lemon.pokeinfo.ui.views;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.router.*;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import industries.lemon.pokeinfo.Constants;
+import industries.lemon.pokeinfo.services.PageStateService;
 import industries.lemon.pokeinfo.services.PokemonNameService;
 import industries.lemon.pokeinfo.services.PokemonSpeciesService;
+import industries.lemon.pokeinfo.ui.MainLayout;
 import industries.lemon.pokeinfo.ui.components.SpeciesContainer;
 
 import java.util.List;
 import java.util.Map;
 
-public class PokemonView extends VerticalLayout {
+@Route(value = "pokemon", layout = MainLayout.class)
+@PageTitle("Pokemon | Pokedata")
+@AnonymousAllowed
+public class PokemonView extends VerticalLayout implements HasUrlParameter<String> {
+    private final PageStateService pageStateService;
     private final PokemonNameService pokemonNameService;
     private final PokemonSpeciesService pokemonSpeciesService;
     private final ComboBox<Integer> languageSelector;
@@ -22,7 +31,6 @@ public class PokemonView extends VerticalLayout {
 
     private boolean initialized = false;
     private boolean loading = false;
-    private int currentSpeciesId = 1;
 
     private static final Map<Integer, String> LANGUAGE_FLAGS = Map.of(
             5, "🇫🇷",  // French
@@ -33,9 +41,11 @@ public class PokemonView extends VerticalLayout {
     );
 
     public PokemonView(
+            PageStateService pageStateService,
             PokemonNameService pokemonNameService,
             PokemonSpeciesService pokemonSpeciesService
     ) {
+        this.pageStateService = pageStateService;
         this.pokemonNameService = pokemonNameService;
         this.pokemonSpeciesService = pokemonSpeciesService;
 
@@ -61,7 +71,17 @@ public class PokemonView extends VerticalLayout {
         add(searchLayout, speciesContainer);
     }
 
+    @Override
+    public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String nationalDex) {
+        int speciesId = parseSpeciesId(nationalDex);
+        search(speciesId);
+    }
+
     private void searchName() {
+        if (isLoading()) {
+            return;
+        }
+
         String speciesName = nameSearchBar.getValue();
         if (speciesName == null) {
             return;
@@ -72,28 +92,36 @@ public class PokemonView extends VerticalLayout {
         if (speciesId < 1) {
             return;
         }
-        search(speciesId);
+
+        UI.getCurrent().navigate(PokemonView.class, String.valueOf(speciesId));
     }
 
     private void searchDexNumber() {
+        if (isLoading()) {
+            return;
+        }
+
         int speciesId = dexNumberSearchBar.getValue();
-        search(speciesId);
+        UI.getCurrent().navigate(PokemonView.class, String.valueOf(speciesId));
     }
 
     public void search(int speciesId) {
         boolean speciesIdOutOfBounds = speciesId < 1 || speciesId > Constants.MAX_SPECIES_ID;
-        boolean redundantSearch = speciesId == currentSpeciesId && initialized;
+        boolean redundantSearch = speciesId == pageStateService.getCurrentSpeciesId() && initialized;
         if (isLoading() || speciesIdOutOfBounds || redundantSearch ) {
             return;
         }
 
         setIsLoading(true);
+        dexNumberSearchBar.setValue(speciesId);
+        nameSearchBar.setValue(getSpeciesNameById(speciesId));
+
         pokemonSpeciesService.fetch(speciesId).doOnNext(
                 species -> getUI().ifPresent(ui -> ui.access(() -> {
                     this.speciesContainer.update(species);
                     this.speciesContainer.setVisible(true);
                     ui.push();
-                    currentSpeciesId = speciesId;
+                    pageStateService.setCurrentSpeciesId(speciesId);
                     initialized = true;
                     setIsLoading(false);
                 }))
@@ -101,9 +129,6 @@ public class PokemonView extends VerticalLayout {
             initialized = true;
             setIsLoading(false);
         }).subscribe();
-
-        dexNumberSearchBar.setValue(speciesId);
-        nameSearchBar.setValue(getSpeciesNameById(speciesId));
     }
 
     private ComboBox<String> createNameSearchBar() {
@@ -137,7 +162,7 @@ public class PokemonView extends VerticalLayout {
         languageSelector.addValueChangeListener(event -> {
             updateSearchBar(event.getValue());
             if (initialized) {
-                nameSearchBar.setValue(getSpeciesNameById(currentSpeciesId));
+                nameSearchBar.setValue(getSpeciesNameById(pageStateService.getCurrentSpeciesId()));
             }
         });
         return languageSelector;
@@ -175,5 +200,14 @@ public class PokemonView extends VerticalLayout {
     private String getSpeciesNameById(int speciesId) {
         int languageId = languageSelector.getValue();
         return pokemonNameService.getSpeciesNames(languageId).get(speciesId - 1);
+    }
+
+    private int parseSpeciesId(String idString) {
+        try {
+            int id = Integer.parseInt(idString);
+            return (id > 0 && id <= Constants.MAX_SPECIES_ID) ? id : 1;
+        } catch (NumberFormatException e) {
+            return pageStateService.getCurrentSpeciesId();
+        }
     }
 }

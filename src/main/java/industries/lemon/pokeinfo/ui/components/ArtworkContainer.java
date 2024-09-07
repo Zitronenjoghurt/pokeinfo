@@ -1,10 +1,10 @@
 package industries.lemon.pokeinfo.ui.components;
 
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
-public class ArtworkContainer extends HorizontalLayout {
-    private Image image;
+public class ArtworkContainer extends Div {
+    private final Image image;
 
     public ArtworkContainer() {
         getStyle()
@@ -14,12 +14,9 @@ public class ArtworkContainer extends HorizontalLayout {
 
         this.image = new Image();
         image.setVisible(false);
-        image.setWidth("100%");
+        image.setWidth("auto");
         image.setHeight("auto");
-
-        setWidth("100%");
-        setHeight("auto");
-        setMaxWidth("300px");
+        image.setMaxWidth("400px");
 
         add(image);
     }

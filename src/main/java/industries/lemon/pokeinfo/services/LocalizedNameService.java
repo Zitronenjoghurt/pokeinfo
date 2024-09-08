@@ -1,7 +1,7 @@
 package industries.lemon.pokeinfo.services;
 
 import industries.lemon.pokeinfo.entities.LocalizedName;
-import industries.lemon.pokeinfo.pokeapi.models.LocalizedNameResponse;
+import industries.lemon.pokeinfo.thirdparty.pokeapi.models.LocalizedNameResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

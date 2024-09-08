@@ -1,6 +1,6 @@
 package industries.lemon.pokeinfo.entities;
 
-import industries.lemon.pokeinfo.pokeapi.models.BaseEntityResponse;
+import industries.lemon.pokeinfo.thirdparty.pokeapi.models.BaseEntityResponse;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

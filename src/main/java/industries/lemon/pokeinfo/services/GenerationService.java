@@ -2,8 +2,8 @@ package industries.lemon.pokeinfo.services;
 
 import industries.lemon.pokeinfo.entities.Generation;
 import industries.lemon.pokeinfo.entities.LocalizedName;
-import industries.lemon.pokeinfo.pokeapi.PokeApiClient;
-import industries.lemon.pokeinfo.pokeapi.models.GenerationResponse;
+import industries.lemon.pokeinfo.thirdparty.pokeapi.PokeApiClient;
+import industries.lemon.pokeinfo.thirdparty.pokeapi.models.GenerationResponse;
 import industries.lemon.pokeinfo.repositories.GenerationRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;

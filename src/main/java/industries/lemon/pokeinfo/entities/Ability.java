@@ -1,7 +1,7 @@
 package industries.lemon.pokeinfo.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import industries.lemon.pokeinfo.pokeapi.models.AbilityResponse;
+import industries.lemon.pokeinfo.thirdparty.pokeapi.models.AbilityResponse;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

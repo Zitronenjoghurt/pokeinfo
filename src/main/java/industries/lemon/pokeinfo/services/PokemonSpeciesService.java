@@ -1,9 +1,9 @@
 package industries.lemon.pokeinfo.services;
 
 import industries.lemon.pokeinfo.entities.*;
-import industries.lemon.pokeinfo.pokeapi.PokeApiClient;
-import industries.lemon.pokeinfo.pokeapi.models.PokemonSpeciesResponse;
-import industries.lemon.pokeinfo.pokeapi.models.PokemonSpeciesVarietyResponse;
+import industries.lemon.pokeinfo.thirdparty.pokeapi.PokeApiClient;
+import industries.lemon.pokeinfo.thirdparty.pokeapi.models.PokemonSpeciesResponse;
+import industries.lemon.pokeinfo.thirdparty.pokeapi.models.PokemonSpeciesVarietyResponse;
 import industries.lemon.pokeinfo.repositories.PokemonSpeciesRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;

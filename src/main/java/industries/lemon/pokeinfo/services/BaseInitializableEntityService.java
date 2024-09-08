@@ -1,8 +1,8 @@
 package industries.lemon.pokeinfo.services;
 
 import industries.lemon.pokeinfo.entities.BaseInitializableEntity;
-import industries.lemon.pokeinfo.pokeapi.PokeApiClient;
-import industries.lemon.pokeinfo.pokeapi.models.BaseEntityResponse;
+import industries.lemon.pokeinfo.thirdparty.pokeapi.PokeApiClient;
+import industries.lemon.pokeinfo.thirdparty.pokeapi.models.BaseEntityResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;

@@ -19,6 +19,7 @@ public class PokemonSpeciesService extends BaseEntityService<PokemonSpecies, Pok
     private final GrowthRateService growthRateService;
     private final LocalizedNameService localizedNameService;
     private final PokemonService pokemonService;
+    private final TcgCardService tcgCardService;
 
     public PokemonSpeciesService(
             PokeApiClient pokeApiClient,
@@ -26,13 +27,26 @@ public class PokemonSpeciesService extends BaseEntityService<PokemonSpecies, Pok
             GenerationService generationService,
             GrowthRateService growthRateService,
             LocalizedNameService localizedNameService,
-            PokemonService pokemonService
+            PokemonService pokemonService,
+            TcgCardService tcgCardService
     ) {
         super(pokeApiClient, repository);
         this.generationService = generationService;
         this.growthRateService = growthRateService;
         this.localizedNameService = localizedNameService;
         this.pokemonService = pokemonService;
+        this.tcgCardService = tcgCardService;
+    }
+
+    public List<TcgCard> getTcgCards(PokemonSpecies species) {
+        if (species.isTcgCardsInitialized()) {
+            return tcgCardService.findCards(species.getSpeciesId());
+        } else {
+            List<TcgCard> cards = tcgCardService.initializeCards(species.getSpeciesId());
+            species.setTcgCardsInitialized(true);
+            repository.save(species);
+            return cards;
+        }
     }
 
     @Override

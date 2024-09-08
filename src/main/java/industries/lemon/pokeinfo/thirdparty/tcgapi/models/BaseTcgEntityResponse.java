@@ -1,12 +1,12 @@
 package industries.lemon.pokeinfo.thirdparty.tcgapi.models;
 
+import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
-
+@MappedSuperclass
 @Getter
 @Setter
-public class TcgCardsResponse extends TcgPaginationResponse {
-    private Set<TcgCardResponse> data;
+public class BaseTcgEntityResponse {
+    private String id;
 }

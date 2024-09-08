@@ -63,6 +63,9 @@ public class PokemonSpecies extends BaseEntity {
     @OneToMany(mappedBy = "species", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<PokemonSpeciesVariant> variants;
 
+    @Column(nullable = false)
+    private boolean tcgCardsInitialized = false;
+
     public String getOfficialArtworkUrl(boolean shiny) {
         if (!shiny) {
             return String.format("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/%s.png", getSpeciesId());

@@ -5,7 +5,6 @@ services:
       - 'POSTGRES_DB=${POSTGRES_DB}'
       - 'POSTGRES_USER=${POSTGRES_USER}'
       - 'POSTGRES_PASSWORD=${POSTGRES_PASSWORD}'
-      - 'POKEMON_TCG_API_KEY=${POKEMON_TCG_API_KEY}'
     ports:
       - '5432:5432'
     volumes:
@@ -21,6 +20,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - POKEMON_TCG_API_KEY=${POKEMON_TCG_API_KEY}
 
 volumes:
   postgres_data:

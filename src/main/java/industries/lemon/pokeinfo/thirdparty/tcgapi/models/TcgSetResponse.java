@@ -1,13 +1,11 @@
 package industries.lemon.pokeinfo.thirdparty.tcgapi.models;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import industries.lemon.pokeinfo.entities.TcgSet;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class TcgSetResponse {
     private String id;
     private String name;
@@ -17,4 +15,17 @@ public class TcgSetResponse {
     private String ptcgoCode;
     private String releaseDate;
     private TcgSetImagesResponse images;
+
+    public TcgSet intoTcgSet() {
+        TcgSet tcgSet = new TcgSet();
+        tcgSet.setSetId(getId());
+        tcgSet.setName(getName());
+        tcgSet.setSeries(getSeries());
+        tcgSet.setPrintedTotal(getPrintedTotal());
+        tcgSet.setTotal(getTotal());
+        tcgSet.setPtcgoCode(getPtcgoCode());
+        tcgSet.setReleaseDate(getReleaseDate());
+        tcgSet.setImages(getImages().intoTcgSetImages());
+        return tcgSet;
+    }
 }

@@ -1,14 +1,19 @@
 package industries.lemon.pokeinfo.thirdparty.tcgapi.models;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import industries.lemon.pokeinfo.entities.TcgSetImages;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class TcgSetImagesResponse {
     private String symbol;
     private String logo;
+
+    public TcgSetImages intoTcgSetImages() {
+        TcgSetImages images = new TcgSetImages();
+        images.setSymbol(getSymbol());
+        images.setLogo(getLogo());
+        return images;
+    }
 }

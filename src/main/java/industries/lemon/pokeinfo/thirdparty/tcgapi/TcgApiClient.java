@@ -1,5 +1,7 @@
 package industries.lemon.pokeinfo.thirdparty.tcgapi;
 
+import industries.lemon.pokeinfo.thirdparty.tcgapi.models.TcgCardResponse;
+import industries.lemon.pokeinfo.thirdparty.tcgapi.models.TcgCardSearchResponse;
 import industries.lemon.pokeinfo.thirdparty.tcgapi.models.TcgCardsResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,14 @@ public class TcgApiClient {
                 .defaultHeader("X-Api-Key", apiKey)
                 .exchangeStrategies(strategies)
                 .build();
+    }
+
+    public Mono<TcgCardResponse> getCardById(String cardId) {
+        return webClient.get()
+                .uri("/card/{cardId}", cardId)
+                .retrieve()
+                .bodyToMono(TcgCardSearchResponse.class)
+                .map(TcgCardSearchResponse::getData);
     }
 
     public Mono<TcgCardsResponse> getCardsByNationalDex(int nationalDex) {

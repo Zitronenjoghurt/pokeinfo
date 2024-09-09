@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -60,8 +62,14 @@ public class PokemonSpecies extends BaseEntity {
     @JoinTable
     private Set<LocalizedName> localizedNames;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinTable
+    private Set<FlavorText> flavorTexts;
+
     @OneToMany(mappedBy = "species", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<PokemonSpeciesVariant> variants;
+
+    // ToDo: pokedex numbers, egg groups, color, shape, evolves from, evolution chain, habitat, genera
 
     @Column(nullable = false)
     private boolean tcgCardsInitialized = false;
@@ -78,6 +86,24 @@ public class PokemonSpecies extends BaseEntity {
                 .filter(PokemonSpeciesVariant::isDefault)
                 .findFirst()
                 .map(PokemonSpeciesVariant::getPokemon);
+    }
+
+    public String getSpecialStates() {
+        List<String> specialStates = new ArrayList<>();
+        if (isBaby()) {
+            specialStates.add("Baby");
+        }
+        if (isLegendary()) {
+            specialStates.add("Legendary");
+        }
+        if (isMythical()) {
+            specialStates.add("Mythical");
+        }
+        if (specialStates.isEmpty()) {
+            specialStates.add("None");
+        }
+
+        return String.join(", ", specialStates);
     }
 
     @Override

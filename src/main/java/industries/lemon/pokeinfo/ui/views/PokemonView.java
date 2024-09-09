@@ -1,6 +1,7 @@
 package industries.lemon.pokeinfo.ui.views;
 
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -8,6 +9,7 @@ import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import industries.lemon.pokeinfo.Constants;
+import industries.lemon.pokeinfo.services.FlavorTextService;
 import industries.lemon.pokeinfo.services.PageStateService;
 import industries.lemon.pokeinfo.services.PokemonNameService;
 import industries.lemon.pokeinfo.services.PokemonSpeciesService;
@@ -41,6 +43,7 @@ public class PokemonView extends VerticalLayout implements HasUrlParameter<Strin
     );
 
     public PokemonView(
+            FlavorTextService flavorTextService,
             PageStateService pageStateService,
             PokemonNameService pokemonNameService,
             PokemonSpeciesService pokemonSpeciesService
@@ -63,12 +66,18 @@ public class PokemonView extends VerticalLayout implements HasUrlParameter<Strin
         searchLayout.setAlignItems(Alignment.BASELINE);
         searchLayout.getStyle().set("gap", "10px");
 
-        this.speciesContainer = new SpeciesContainer();
+        Checkbox shinyButton = createShinyButton();
+
+        VerticalLayout topBar = new VerticalLayout(searchLayout, shinyButton);
+        topBar.setAlignItems(Alignment.CENTER);
+
+        this.speciesContainer = new SpeciesContainer(pageStateService, flavorTextService);
         speciesContainer.setVisible(false);
 
         languageSelector.setValue(9);
+        shinyButton.setValue(pageStateService.isShinyEnabled());
 
-        add(searchLayout, speciesContainer);
+        add(topBar, speciesContainer);
     }
 
     @Override
@@ -129,6 +138,18 @@ public class PokemonView extends VerticalLayout implements HasUrlParameter<Strin
             initialized = true;
             setIsLoading(false);
         }).subscribe();
+    }
+
+    private void changeShinyState(boolean value) {
+        pageStateService.setShinyEnabled(value);
+        speciesContainer.onToggleShiny();
+    }
+
+    private Checkbox createShinyButton() {
+        Checkbox shinyButton = new Checkbox();
+        shinyButton.setLabel("Shiny?");
+        shinyButton.addValueChangeListener(e -> changeShinyState(e.getValue()));
+        return shinyButton;
     }
 
     private ComboBox<String> createNameSearchBar() {

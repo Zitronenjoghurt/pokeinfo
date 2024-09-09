@@ -10,13 +10,20 @@ public class ArtworkContainer extends Div {
         getStyle()
                 .set("border-radius", "var(--lumo-border-radius-l)")
                 .set("background-color", "var(--lumo-contrast-5pct)")
-                .set("box-shadow", "0 4px 8px rgba(0,0,0,0.2)");
+                .set("box-shadow", "0 4px 8px rgba(0,0,0,0.2)")
+                .set("width", "100%")
+                .set("max-width", "400px")
+                .set("aspect-ratio", "1 / 1")
+                .set("display", "flex")
+                .set("align-items", "center")
+                .set("justify-content", "center");
 
         this.image = new Image();
+        image.getStyle()
+                .set("max-width", "100%")
+                .set("max-height", "100%")
+                .set("object-fit", "contain");
         image.setVisible(false);
-        image.setWidth("auto");
-        image.setHeight("auto");
-        image.setMaxWidth("400px");
 
         add(image);
     }

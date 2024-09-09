@@ -11,4 +11,5 @@ import org.springframework.stereotype.Service;
 @VaadinSessionScope
 public class PageStateService {
     private int currentSpeciesId = 1;
+    private boolean isShinyEnabled = false;
 }

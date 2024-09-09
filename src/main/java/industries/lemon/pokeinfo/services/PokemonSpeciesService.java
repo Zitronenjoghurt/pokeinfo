@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class PokemonSpeciesService extends BaseEntityService<PokemonSpecies, PokemonSpeciesRepository, PokemonSpeciesResponse> {
+    private final FlavorTextService flavorTextService;
     private final GenerationService generationService;
     private final GrowthRateService growthRateService;
     private final LocalizedNameService localizedNameService;
@@ -22,6 +23,7 @@ public class PokemonSpeciesService extends BaseEntityService<PokemonSpecies, Pok
     private final TcgCardService tcgCardService;
 
     public PokemonSpeciesService(
+            FlavorTextService flavorTextService,
             PokeApiClient pokeApiClient,
             PokemonSpeciesRepository repository,
             GenerationService generationService,
@@ -31,6 +33,7 @@ public class PokemonSpeciesService extends BaseEntityService<PokemonSpecies, Pok
             TcgCardService tcgCardService
     ) {
         super(pokeApiClient, repository);
+        this.flavorTextService = flavorTextService;
         this.generationService = generationService;
         this.growthRateService = growthRateService;
         this.localizedNameService = localizedNameService;
@@ -62,12 +65,14 @@ public class PokemonSpeciesService extends BaseEntityService<PokemonSpecies, Pok
     @Override
     protected PokemonSpecies fromResponse(PokemonSpeciesResponse response) {
         Set<LocalizedName> localizedNames = localizedNameService.createLocalizedNames(response.getNames());
+        Set<FlavorText> flavorTexts = flavorTextService.createFlavorTexts(response.getFlavorTextEntries());
         GrowthRate growthRate = growthRateService.fetch(response.getGrowthRate().getId()).block();
         Generation generation =generationService.findByIdOrCreate(response.getGeneration().getId());
         PokemonSpecies species = response.intoPokemonSpecies();
         Set<PokemonSpeciesVariant> variants = findOrCreateSpeciesVariants(response, species);
         species.setVariants(variants);
         species.setLocalizedNames(localizedNames);
+        species.setFlavorTexts(flavorTexts);
         species.setGrowthRate(growthRate);
         species.setGeneration(generation);
         return species;

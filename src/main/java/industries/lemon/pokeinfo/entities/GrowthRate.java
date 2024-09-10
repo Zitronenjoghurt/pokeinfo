@@ -12,7 +12,7 @@ import java.util.Set;
 @Setter
 @Table(name = "growth_rates")
 public class GrowthRate extends BaseEntity {
-    @Column(updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false, unique = true)
     private int growthRateId;
 
     @Column(updatable = false, nullable = false)

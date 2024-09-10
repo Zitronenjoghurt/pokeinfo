@@ -14,7 +14,7 @@ import java.util.Set;
 @Setter
 @Table(name = "abilities")
 public class Ability extends BaseInitializableEntity<AbilityResponse> {
-    @Column(updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false, unique = true)
     private int abilityId;
 
     @OneToMany(mappedBy = "ability")

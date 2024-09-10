@@ -13,7 +13,7 @@ import java.util.Set;
 @Setter
 @Table(name = "pokemon")
 public class Pokemon extends BaseEntity {
-    @Column(updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false, unique = true)
     private int pokemonId;
 
     @Column(updatable = false, nullable = false)

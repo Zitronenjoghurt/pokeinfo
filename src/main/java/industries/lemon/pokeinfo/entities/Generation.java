@@ -14,7 +14,7 @@ import java.util.Set;
 @Setter
 @Table(name = "generations")
 public class Generation extends BaseInitializableEntity<GenerationResponse> {
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, unique = true)
     private int generationId;
 
     @OneToMany(mappedBy = "generation")

@@ -12,6 +12,7 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import industries.lemon.pokeinfo.ui.views.HomeView;
 import industries.lemon.pokeinfo.ui.views.PokemonView;
+import industries.lemon.pokeinfo.ui.views.TypeView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +47,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
     private Tabs createNavigation() {
         Tab homeTab = createTab("Home", HomeView.class);
         Tab pokemonTab = createTab("Pokemon", PokemonView.class);
-        return new Tabs(homeTab, pokemonTab);
+        Tab typingTab = createTab("Types", TypeView.class);
+        return new Tabs(homeTab, pokemonTab, typingTab);
     }
 
     private Tab createTab(String label, Class<? extends Component> navigationTarget) {

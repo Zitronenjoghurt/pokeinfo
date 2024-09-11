@@ -1,6 +1,7 @@
 package industries.lemon.pokeinfo.services;
 
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
+import industries.lemon.pokeinfo.enums.PokemonTyping;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
@@ -12,14 +13,14 @@ import org.springframework.stereotype.Service;
 public class PageStateService {
     private int currentSpeciesId = 1;
     private boolean isShinyEnabled = false;
-    private int primaryTypeId = 0;
-    private int secondaryTypeId = 0;
+    private PokemonTyping primaryType = null;
+    private PokemonTyping secondaryType = null;
 
-    public int getType(boolean isPrimary) {
+    public PokemonTyping getType(boolean isPrimary) {
         if (isPrimary) {
-            return getPrimaryTypeId();
+            return getPrimaryType();
         } else {
-            return getSecondaryTypeId();
+            return getSecondaryType();
         }
     }
 }

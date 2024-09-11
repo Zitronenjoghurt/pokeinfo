@@ -8,7 +8,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 public class IconLabeledField extends VerticalLayout {
 
     private final Span label;
-    private final CustomIcon icon;
     private final Span valueSpan;
 
     public IconLabeledField(String labelText, String iconName, String initialValue, int iconSize) {
@@ -21,7 +20,7 @@ public class IconLabeledField extends VerticalLayout {
                 .set("font-size", "var(--lumo-font-size-s)")
                 .set("color", "var(--lumo-secondary-text-color)");
 
-        icon = new CustomIcon(iconName, iconSize);
+        CustomIcon icon = new CustomIcon(iconName, iconSize);
 
         valueSpan = new Span(initialValue);
         valueSpan.getStyle()

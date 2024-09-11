@@ -2,6 +2,7 @@ package industries.lemon.pokeinfo.enums;
 
 import lombok.Getter;
 
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -54,7 +55,7 @@ public enum PokemonTyping {
     }
 
     public static PokemonTyping fromName(String name) {
-        return NAME_MAP.get(name.toLowerCase());
+        return NAME_MAP.getOrDefault(name.toLowerCase(), null);
     }
 
     public int getId() {
@@ -71,6 +72,22 @@ public enum PokemonTyping {
 
     public double getEffectivenessAgainst(PokemonTyping defendingType) {
         return EFFECTIVENESS_MAP.get(this).getOrDefault(defendingType, 1.0);
+    }
+
+    public static Map<PokemonTyping, Double> calculateEffectiveness(PokemonTyping defendingType) {
+        return Arrays.stream(PokemonTyping.values())
+                .collect(Collectors.toMap(
+                        attackingType -> attackingType,
+                        attackingType -> calculateDamageMultiplier(attackingType, defendingType)
+                ));
+    }
+
+    public static Map<PokemonTyping, Double> calculateEffectiveness(PokemonTyping defendingType1, PokemonTyping defendingType2) {
+        return Arrays.stream(PokemonTyping.values())
+                .collect(Collectors.toMap(
+                        attackingType -> attackingType,
+                        attackingType -> calculateDamageMultiplier(attackingType, defendingType1, defendingType2)
+                ));
     }
 
     public static double calculateDamageMultiplier(PokemonTyping attackingType, PokemonTyping defendingType) {

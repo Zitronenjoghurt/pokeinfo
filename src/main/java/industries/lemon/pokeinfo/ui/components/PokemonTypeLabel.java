@@ -11,7 +11,8 @@ public class PokemonTypeLabel extends HorizontalLayout {
             PokemonTyping type,
             int iconSize,
             int fontSize,
-            int width
+            int width,
+            Double effectiveness
     ) {
         this.type = type;
 
@@ -40,6 +41,11 @@ public class PokemonTypeLabel extends HorizontalLayout {
             textWrapper.setFlexGrow(1);
 
             add(icon, textWrapper);
+
+            if (effectiveness != null) {
+                EffectivenessIcon effectivenessIcon = new EffectivenessIcon(effectiveness, iconSize);
+                add(effectivenessIcon);
+            }
         }
     }
 

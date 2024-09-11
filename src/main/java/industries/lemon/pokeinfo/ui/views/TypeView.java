@@ -11,6 +11,7 @@ import industries.lemon.pokeinfo.enums.PokemonTyping;
 import industries.lemon.pokeinfo.services.PageStateService;
 import industries.lemon.pokeinfo.ui.MainLayout;
 import industries.lemon.pokeinfo.ui.components.PokemonTypeLabel;
+import industries.lemon.pokeinfo.ui.components.TypeEffectivenessChart;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,14 +24,17 @@ import java.util.Optional;
 public class TypeView extends VerticalLayout implements BeforeEnterObserver {
     private final PageStateService pageStateService;
 
+    private final TypeEffectivenessChart effectivenessChart;
     private final Select<PokemonTyping> primarySelector;
     private final Select<PokemonTyping> secondarySelector;
-    private int primaryTypeId = 0;
-    private int secondaryTypeId = 0;
+    private PokemonTyping primaryType = null;
+    private PokemonTyping secondaryType = null;
     private boolean initialized = false;
 
     public TypeView(PageStateService pageStateService) {
         this.pageStateService = pageStateService;
+        this.effectivenessChart = new TypeEffectivenessChart();
+        effectivenessChart.setTitle("When attacked...");
 
         setSizeFull();
         setAlignItems(Alignment.CENTER);
@@ -40,7 +44,7 @@ public class TypeView extends VerticalLayout implements BeforeEnterObserver {
         secondarySelector = createTypeSelector(false);
         HorizontalLayout searchBar = new HorizontalLayout(primarySelector, secondarySelector);
 
-        add(searchBar);
+        add(searchBar, effectivenessChart);
     }
 
     @Override
@@ -54,31 +58,44 @@ public class TypeView extends VerticalLayout implements BeforeEnterObserver {
                 .map(List::getFirst)
                 .orElse(null);
 
-        primaryTypeId = parseTypeString(primaryString, true);
-        secondaryTypeId = parseTypeString(secondaryString, false);
+        primaryType = parseTypeString(primaryString, true);
+        secondaryType = parseTypeString(secondaryString, false);
 
-        pageStateService.setPrimaryTypeId(primaryTypeId);
-        pageStateService.setSecondaryTypeId(secondaryTypeId);
+        pageStateService.setPrimaryType(primaryType);
+        pageStateService.setSecondaryType(secondaryType);
 
-        if (primaryTypeId == 0) {
-            primarySelector.setValue(null);
-        } else {
-            primarySelector.setValue(PokemonTyping.fromId(primaryTypeId));
-        }
-
-        if (secondaryTypeId == 0) {
-            secondarySelector.setValue(null);
-        } else {
-            secondarySelector.setValue(PokemonTyping.fromId(secondaryTypeId));
-        }
+        primarySelector.setValue(primaryType);
+        secondarySelector.setValue(secondaryType);
 
         updateTypeChart();
 
         initialized = true;
     }
 
+    public static QueryParameters createQueryParameters(PokemonTyping primaryType, PokemonTyping secondaryType) {
+        Map<String, String> parametersMap = new HashMap<>();
+        parametersMap.put("primary", primaryType == null ? "none" : primaryType.getDisplayName().toLowerCase());
+        parametersMap.put("secondary", secondaryType == null ? "none" : secondaryType.getDisplayName().toLowerCase());
+        return QueryParameters.simple(parametersMap);
+    }
+
     private void updateTypeChart() {
-        // ToDo: Render type effectiveness chart
+        effectivenessChart.setVisible(true);
+        Map<PokemonTyping, Double> effectivenessMap = getEffectivenessMap();
+        effectivenessChart.update(effectivenessMap);
+    }
+
+    private Map<PokemonTyping, Double> getEffectivenessMap() {
+        if (primaryType == null && secondaryType == null) {
+            effectivenessChart.setVisible(false);
+            return new HashMap<>();
+        } else if (primaryType == null) {
+            return PokemonTyping.calculateEffectiveness(secondaryType);
+        } else if (secondaryType == null) {
+            return PokemonTyping.calculateEffectiveness(primaryType);
+        } else {
+            return PokemonTyping.calculateEffectiveness(primaryType, secondaryType);
+        }
     }
 
     private Select<PokemonTyping> createTypeSelector(boolean isPrimary) {
@@ -95,7 +112,7 @@ public class TypeView extends VerticalLayout implements BeforeEnterObserver {
                 if (type == null) {
                     return null;
                 }
-                return new PokemonTypeLabel(type, 25, 16, 140);
+                return new PokemonTypeLabel(type, 25, 16, 140, null);
             }
         ));
 
@@ -112,25 +129,18 @@ public class TypeView extends VerticalLayout implements BeforeEnterObserver {
 
     private void onTypeSelectionChange(boolean isPrimary, PokemonTyping type) {
         if (isPrimary) {
-            primaryTypeId = type != null ? type.getId() : 0;
+            primaryType = type;
         } else {
-            secondaryTypeId = type != null ? type.getId() : 0;
+            secondaryType = type;
         }
 
-        Map<String, String> parametersMap = new HashMap<>();
-        parametersMap.put("primary", String.valueOf(primaryTypeId));
-        parametersMap.put("secondary", String.valueOf(secondaryTypeId));
-
-        QueryParameters queryParameters = QueryParameters.simple(parametersMap);
-        UI.getCurrent().navigate(TypeView.class, queryParameters);
+        UI.getCurrent().navigate(TypeView.class, createQueryParameters(primaryType, secondaryType));
     }
 
-    private Integer parseTypeString(String typeId, boolean isPrimaryType) {
-        try {
-            int id = Integer.parseInt(typeId);
-            return (id >= 0 && id <= PokemonTyping.getMaxId()) ? id : pageStateService.getType(isPrimaryType);
-        } catch (NumberFormatException e) {
+    private PokemonTyping parseTypeString(String typeName, boolean isPrimaryType) {
+        if (typeName == null) {
             return pageStateService.getType(isPrimaryType);
         }
+        return PokemonTyping.fromName(typeName);
     }
 }

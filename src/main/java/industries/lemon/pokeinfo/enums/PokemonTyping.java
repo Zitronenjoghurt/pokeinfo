@@ -46,20 +46,27 @@ public enum PokemonTyping {
         this.displayColor = displayColor;
     }
 
+    static {
+        for (PokemonTyping type : values()) {
+            EFFECTIVENESS_MAP.put(type, new EnumMap<>(PokemonTyping.class));
+        }
+        initializeEffectiveness();
+    }
+
     public static PokemonTyping fromName(String name) {
         return NAME_MAP.get(name.toLowerCase());
     }
 
-    public int getIndex() {
-        return this.ordinal();
+    public int getId() {
+        return this.ordinal() + 1;
     }
 
-    public static PokemonTyping fromIndex(int index) {
-        return (index >= 0 && index < VALUES.length) ? VALUES[index] : VALUES[0];
+    public static PokemonTyping fromId(int id) {
+        return (id > 0 && id <= VALUES.length) ? VALUES[id - 1] : null;
     }
 
-    public static int getMaxIndex() {
-        return VALUES.length - 1;
+    public static int getMaxId() {
+        return VALUES.length;
     }
 
     public double getEffectivenessAgainst(PokemonTyping defendingType) {
@@ -79,7 +86,7 @@ public enum PokemonTyping {
     }
 
     // Initialize type effectiveness
-    static {
+    private static void initializeEffectiveness() {
         setEffectiveness(NORMAL, ROCK, 0.5);
         setEffectiveness(NORMAL, STEEL, 0.5);
         setEffectiveness(NORMAL, GHOST, 0);

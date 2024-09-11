@@ -12,14 +12,14 @@ import org.springframework.stereotype.Service;
 public class PageStateService {
     private int currentSpeciesId = 1;
     private boolean isShinyEnabled = false;
-    private Integer type1 = null;
-    private Integer type2 = null;
+    private int primaryTypeId = 0;
+    private int secondaryTypeId = 0;
 
-    public Integer getType(boolean isFirst) {
-        if (isFirst) {
-            return getType1();
+    public int getType(boolean isPrimary) {
+        if (isPrimary) {
+            return getPrimaryTypeId();
         } else {
-            return getType2();
+            return getSecondaryTypeId();
         }
     }
 }

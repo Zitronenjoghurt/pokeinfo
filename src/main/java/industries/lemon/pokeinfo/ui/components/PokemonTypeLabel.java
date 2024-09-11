@@ -5,10 +5,19 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import industries.lemon.pokeinfo.enums.PokemonTyping;
 
 public class PokemonTypeLabel extends HorizontalLayout {
+    private final PokemonTyping type;
 
-    public PokemonTypeLabel(PokemonTyping type) {
+    public PokemonTypeLabel(
+            PokemonTyping type,
+            int iconSize,
+            int fontSize,
+            int width
+    ) {
+        this.type = type;
+
         setAlignItems(Alignment.CENTER);
         setPadding(true);
+        setSpacing(false);
 
         getStyle().set("padding", "4px")
                 .set("box-shadow", "0 4px 8px rgba(0,0,0,0.2)")
@@ -17,14 +26,24 @@ public class PokemonTypeLabel extends HorizontalLayout {
                 .set("background-color", "var(--lumo-contrast-5pct)")
                 .set("font-weight", "bold");
 
-        setWidth("140px");
+        setWidth(width+"px");
 
         if (type != null) {
-            PokemonTypeIcon icon = PokemonTypeIcon.fromType(type, 30);
+            PokemonTypeIcon icon = PokemonTypeIcon.fromType(type, iconSize);
             Span typeText = new Span(type.getDisplayName());
-            typeText.getStyle().set("font-size", "16px");
+            typeText.getStyle().set("font-size", fontSize+"px");
 
-            add(icon, typeText);
+            HorizontalLayout textWrapper = new HorizontalLayout(typeText);
+            textWrapper.setAlignItems(Alignment.CENTER);
+            textWrapper.setJustifyContentMode(JustifyContentMode.CENTER);
+            textWrapper.setSizeFull();
+            textWrapper.setFlexGrow(1);
+
+            add(icon, textWrapper);
         }
+    }
+
+    public String getTypeName() {
+        return type.getDisplayName();
     }
 }

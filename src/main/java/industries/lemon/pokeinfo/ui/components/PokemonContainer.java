@@ -15,6 +15,10 @@ public class PokemonContainer extends VerticalLayout {
     private final HorizontalLayout typeLabels;
     private final PokemonStatsContainer statsContainer;
 
+    private static int TYPE_ICON_SIZE = 30;
+    private static int TYPE_ICON_FONT_SIZE = 20;
+    private static int TYPE_ICON_WIDTH = 140;
+
     public PokemonContainer() {
         setAlignItems(Alignment.CENTER);
 
@@ -41,11 +45,11 @@ public class PokemonContainer extends VerticalLayout {
 
         for (PokemonType type : sortedTypes) {
             PokemonTyping typing = PokemonTyping.fromName(type.getType());
-            typeLabels.add(new PokemonTypeLabel(typing));
+            typeLabels.add(new PokemonTypeLabel(typing, TYPE_ICON_SIZE, TYPE_ICON_FONT_SIZE, TYPE_ICON_WIDTH));
         }
 
         if (sortedTypes.size() == 1) {
-            typeLabels.add(new PokemonTypeLabel(null));
+            typeLabels.add(new PokemonTypeLabel(null, TYPE_ICON_SIZE, TYPE_ICON_FONT_SIZE, TYPE_ICON_WIDTH));
         }
     }
 

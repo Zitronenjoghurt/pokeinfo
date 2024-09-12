@@ -4,50 +4,81 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import industries.lemon.pokeinfo.entities.Pokemon;
 import industries.lemon.pokeinfo.entities.PokemonType;
 import industries.lemon.pokeinfo.enums.PokemonTyping;
 import industries.lemon.pokeinfo.ui.views.TypeView;
+import industries.lemon.pokeinfo.utils.UnitsUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-public class PokemonContainer extends VerticalLayout {
+public class PokemonContainer extends FlexLayout {
     private final HorizontalLayout typeLabels;
     private final PokemonStatsContainer statsContainer;
     private final List<PokemonTyping> currentTypes = new ArrayList<>();
+    private final SpritesContainer spritesContainer;
+    private final IconLabeledField heightField;
+    private final IconLabeledField weightField;
+    private final IconLabeledField baseXpField;
 
     private static int TYPE_ICON_SIZE = 30;
     private static int TYPE_ICON_FONT_SIZE = 20;
     private static int TYPE_ICON_WIDTH = 140;
 
     public PokemonContainer() {
-        setAlignItems(Alignment.CENTER);
-
-        getStyle()
-                .set("border-radius", "var(--lumo-border-radius-l)");
-                //.set("background-color", "var(--lumo-contrast-5pct)")
-                //.set("box-shadow", "0 4px 8px rgba(0,0,0,0.2)");
+        setAlignItems(Alignment.START);
+        setJustifyContentMode(JustifyContentMode.EVENLY);
+        setFlexDirection(FlexDirection.ROW);
+        setFlexWrap(FlexWrap.WRAP);
 
         this.typeLabels = new HorizontalLayout();
         Button typeMatchupButton = new Button(new Icon(VaadinIcon.OPEN_BOOK));
         typeMatchupButton.addClickListener(e -> onTypeMatchupClicked());
         typeMatchupButton.getStyle().set("box-shadow", "0 4px 8px rgba(0,0,0,0.2)");
-        HorizontalLayout statsBar = new HorizontalLayout(typeLabels, typeMatchupButton);
+        HorizontalLayout typesBar = new HorizontalLayout(typeLabels, typeMatchupButton);
 
         this.statsContainer = new PokemonStatsContainer();
+        VerticalLayout leftContainer = new VerticalLayout(typesBar, statsContainer);
+        leftContainer.setAlignItems(Alignment.CENTER);
+        leftContainer.setWidth("auto");
 
-        add(statsBar, statsContainer);
+        this.spritesContainer = new SpritesContainer();
+        this.heightField = new IconLabeledField("Height", "size", "0", 20);
+        this.weightField = new IconLabeledField("Weight", "weight", "0", 20);
+        FlexLayout sizeContainer = new FlexLayout(heightField, weightField);
+        sizeContainer.setFlexDirection(FlexLayout.FlexDirection.ROW);
+        sizeContainer.setJustifyContentMode(JustifyContentMode.EVENLY);
+        sizeContainer.setAlignItems(Alignment.STRETCH);
+        sizeContainer.setFlexWrap(FlexLayout.FlexWrap.WRAP);
+        sizeContainer.setSizeFull();
+        this.baseXpField = new IconLabeledField("Base Exp.", "xp", "0", 20);
+        VerticalLayout rightContainer = new VerticalLayout(spritesContainer, sizeContainer, baseXpField);
+        rightContainer.setAlignItems(Alignment.CENTER);
+        rightContainer.setWidth("auto");
+
+        add(leftContainer, rightContainer);
     }
 
     public void update(Pokemon pokemon) {
         this.typeLabels.removeAll();
         addTypes(pokemon.getTypes());
         this.statsContainer.update(pokemon);
+        this.spritesContainer.update(pokemon.getSprites());
+        this.baseXpField.setValue(String.valueOf(pokemon.getBaseExperience()));
+
+        String heightMetric = UnitsUtils.formatDecimetersMetric(pokemon.getHeight());
+        String heightImperial = UnitsUtils.formatDecimetersImperial(pokemon.getHeight());
+        String weightMetric = UnitsUtils.formatHectogramsMetric(pokemon.getWeight());
+        String weightImperial = UnitsUtils.formatHectogramsImperial(pokemon.getWeight());
+
+        this.heightField.setValue(heightMetric + " | " + heightImperial);
+        this.weightField.setValue(weightMetric + " | " + weightImperial);
     }
 
     private void addTypes(Set<PokemonType> types) {

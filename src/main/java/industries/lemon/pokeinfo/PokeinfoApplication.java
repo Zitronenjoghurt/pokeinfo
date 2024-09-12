@@ -24,6 +24,7 @@ public class PokeinfoApplication implements AppShellConfigurator {
         settings.addMetaTag("og:title", "Pokedata.xyz");
         settings.addMetaTag("og:description", "Your comprehensive Pokémon database");
         settings.addMetaTag("og:type", "website");
-        settings.addMetaTag("theme-color", "#0085FD");
+        settings.addMetaTag("theme-color", "#2B3C52");
+        settings.addLink("shortcut icon", "icons/favicon.ico");
     }
 }

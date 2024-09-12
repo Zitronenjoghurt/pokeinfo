@@ -60,7 +60,7 @@ public class TypeEffectivenessChart extends VerticalLayout {
     }
 
     private PokemonTypeLabel createTypeLabel(PokemonTyping type, Double effectiveness) {
-        return new PokemonTypeLabel(type, 30, 16, 160, effectiveness);
+        return new PokemonTypeLabel(type, 30, 16, 150, effectiveness);
     }
 
     private LabeledBox createLabeledBox(String labelText) {

@@ -1,7 +1,7 @@
 package industries.lemon.pokeinfo.ui.views;
 
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -42,7 +42,12 @@ public class TypeView extends VerticalLayout implements BeforeEnterObserver {
 
         primarySelector = createTypeSelector(true);
         secondarySelector = createTypeSelector(false);
-        HorizontalLayout searchBar = new HorizontalLayout(primarySelector, secondarySelector);
+        FlexLayout searchBar = new FlexLayout(primarySelector, secondarySelector);
+        searchBar.setFlexDirection(FlexLayout.FlexDirection.ROW);
+        searchBar.setFlexWrap(FlexLayout.FlexWrap.WRAP);
+        searchBar.setAlignItems(Alignment.CENTER);
+        searchBar.setJustifyContentMode(FlexLayout.JustifyContentMode.CENTER);
+        searchBar.getStyle().set("gap", "5px");
 
         add(searchBar, effectivenessChart);
     }

@@ -6,13 +6,13 @@ import com.vaadin.flow.component.html.Image;
 public class ArtworkContainer extends Div {
     private final Image image;
 
-    public ArtworkContainer() {
+    public ArtworkContainer(int maxWidth) {
         getStyle()
                 .set("border-radius", "var(--lumo-border-radius-l)")
                 .set("background-color", "var(--lumo-contrast-5pct)")
                 .set("box-shadow", "0 4px 8px rgba(0,0,0,0.2)")
                 .set("width", "100%")
-                .set("max-width", "400px")
+                .set("max-width", maxWidth+"px")
                 .set("aspect-ratio", "1 / 1")
                 .set("display", "flex")
                 .set("align-items", "center")
@@ -29,7 +29,9 @@ public class ArtworkContainer extends Div {
     }
 
     public void update(String artworkUrl, String alt) {
-        this.image.setSrc(artworkUrl);
+        if (artworkUrl != null) {
+            image.setSrc(artworkUrl);
+        }
         this.image.setAlt(alt);
         image.setVisible(true);
     }

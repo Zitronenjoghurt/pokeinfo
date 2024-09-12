@@ -30,9 +30,10 @@ public class LabeledBox extends VerticalLayout {
         //        .set("background-color", "var(--lumo-contrast-5pct)")
         //        .set("box-shadow", "0 4px 8px rgba(0,0,0,0.2)");
 
+        contentLayout.setFlexDirection(FlexLayout.FlexDirection.ROW);
         contentLayout.setFlexWrap(FlexLayout.FlexWrap.WRAP);
-        contentLayout.setJustifyContentMode(JustifyContentMode.START);
-        contentLayout.setAlignItems(Alignment.START);
+        contentLayout.setJustifyContentMode(JustifyContentMode.CENTER);
+        contentLayout.setAlignItems(Alignment.CENTER);
         contentLayout.getStyle().set("gap", "5px");
 
         boxContainer.add(contentLayout);

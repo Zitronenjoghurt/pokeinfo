@@ -31,9 +31,11 @@ public class TextCarousel extends VerticalLayout {
         HorizontalLayout navigation = new HorizontalLayout(prevButton, titleElement, nextButton);
         navigation.setAlignItems(Alignment.CENTER);
         navigation.setJustifyContentMode(JustifyContentMode.CENTER);
+        navigation.setWidth("auto");
 
         add(contentDiv, navigation);
         setAlignItems(Alignment.STRETCH);
+        setWidthFull();
     }
 
     public void addItem(String title, String text) {

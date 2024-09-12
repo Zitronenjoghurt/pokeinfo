@@ -13,6 +13,7 @@ public class IconLabeledField extends VerticalLayout {
     public IconLabeledField(String labelText, String iconName, String initialValue, int iconSize) {
         setSpacing(false);
         setPadding(false);
+        setWidth("auto");
 
         label = new Span(labelText);
         label.getElement().getThemeList().add("label");
@@ -36,7 +37,7 @@ public class IconLabeledField extends VerticalLayout {
                 .set("padding", "var(--lumo-space-xs) var(--lumo-space-s)")
                 .set("min-height", "var(--lumo-size-m)")
                 .set("background-color", "var(--lumo-contrast-5pct)")
-                .setWidth("100%");
+                .setMinWidth("150px");
 
         add(label, fieldContainer);
     }

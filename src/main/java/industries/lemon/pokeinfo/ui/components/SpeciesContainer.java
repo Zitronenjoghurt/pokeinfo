@@ -1,7 +1,6 @@
 package industries.lemon.pokeinfo.ui.components;
 
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import industries.lemon.pokeinfo.entities.FlavorText;
 import industries.lemon.pokeinfo.entities.Pokemon;
@@ -52,17 +51,24 @@ public class SpeciesContainer extends VerticalLayout {
                 .set("display", "grid")
                 .set("grid-template-columns", "1fr 1fr")
                 .set("gap", "10px");
-        infoGrid.setWidthFull();
 
         this.flavorTextContainer = new FlavorTextContainer();
 
-        this.artwork = new ArtworkContainer();
+        this.artwork = new ArtworkContainer(350);
         this.defaultContainer = new PokemonContainer();
 
         VerticalLayout basicInfo = new VerticalLayout(infoGrid, flavorTextContainer);
+        basicInfo.setAlignItems(Alignment.CENTER);
         basicInfo.setPadding(false);
+        basicInfo.setWidth("auto");
 
-        HorizontalLayout topLine = new HorizontalLayout(artwork, basicInfo);
+        FlexLayout topLine = new FlexLayout(artwork, basicInfo);
+        topLine.setAlignItems(Alignment.CENTER);
+        topLine.setJustifyContentMode(JustifyContentMode.EVENLY);
+        topLine.setFlexDirection(FlexLayout.FlexDirection.ROW);
+        topLine.setFlexWrap(FlexLayout.FlexWrap.WRAP);
+        topLine.getStyle().set("gap", "20px");
+        topLine.setWidthFull();
         add(topLine, defaultContainer);
     }
 

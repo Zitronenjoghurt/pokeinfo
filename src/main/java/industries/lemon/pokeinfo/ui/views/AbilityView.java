@@ -1,5 +1,6 @@
 package industries.lemon.pokeinfo.ui.views;
 
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
@@ -9,6 +10,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import industries.lemon.pokeinfo.enums.Language;
 import industries.lemon.pokeinfo.services.AbilityService;
 import industries.lemon.pokeinfo.services.PageStateService;
+import industries.lemon.pokeinfo.services.PokemonNameService;
 import industries.lemon.pokeinfo.services.PokemonService;
 import industries.lemon.pokeinfo.ui.MainLayout;
 import industries.lemon.pokeinfo.ui.components.AbilityContainer;
@@ -32,8 +34,8 @@ public class AbilityView extends VerticalLayout implements HasUrlParameter<Strin
     public AbilityView(
             AbilityService abilityService,
             PokemonService pokemonService,
-            PageStateService pageStateService
-    ) {
+            PageStateService pageStateService,
+            PokemonNameService pokemonNameService) {
         this.abilityService = abilityService;
         this.pageStateService = pageStateService;
 
@@ -43,7 +45,7 @@ public class AbilityView extends VerticalLayout implements HasUrlParameter<Strin
 
         this.languageSelector = createLanguageSelector();
         this.nameSearchBar = createNameSearchBar();
-        this.abilityContainer = new AbilityContainer(pokemonService);
+        this.abilityContainer = new AbilityContainer(pokemonService, pokemonNameService);
         abilityContainer.setVisible(false);
 
         FlexLayout searchLayout = new FlexLayout(languageSelector, nameSearchBar);
@@ -54,13 +56,26 @@ public class AbilityView extends VerticalLayout implements HasUrlParameter<Strin
 
         languageSelector.setValue(Language.ENGLISH.getId());
 
-        add(searchLayout);
+        add(searchLayout, abilityContainer);
     }
 
     @Override
     public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String abilityId) {
         int id = parseAbilityId(abilityId);
-        search(id);
+
+        // Ensures it only searches when the UI is ready
+        if (initialized) {
+            search(id);
+        } else {
+            // If UI wasn't initialized yet the onAttach will handle the search
+            pageStateService.setCurrentAbilityId(id);
+        }
+    }
+
+    @Override
+    public void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        search(pageStateService.getCurrentAbilityId());
     }
 
     private void search(int abilityId) {
@@ -146,11 +161,15 @@ public class AbilityView extends VerticalLayout implements HasUrlParameter<Strin
     private void onLoadingStart() {
         languageSelector.setEnabled(false);
         nameSearchBar.setEnabled(false);
+        abilityContainer.getElement().getStyle().set("opacity", "0.5");
+        abilityContainer.getElement().getStyle().set("pointer-events", "none");
     }
 
     private void onLoadingFinish() {
         languageSelector.setEnabled(true);
         nameSearchBar.setEnabled(true);
+        abilityContainer.getElement().getStyle().set("opacity", "1");
+        abilityContainer.getElement().getStyle().remove("pointer-events");
     }
 
     private int parseAbilityId(String idString) {

@@ -52,4 +52,8 @@ public class PokemonNameService {
     public int getSpeciesIdByName(String name, int languageId) {
         return pokemonNameMatcher.getSpeciesIdByName(name, languageId);
     }
+
+    public String getNameByIdAndLanguage(int speciesId, int languageId) {
+        return getSpeciesNames(languageId).get(speciesId - 1);
+    }
 }

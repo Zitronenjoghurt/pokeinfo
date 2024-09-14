@@ -23,8 +23,10 @@ public class PokemonResponse extends BaseEntityResponse {
     private List<PokemonAbilityResponse> abilities;
     private List<NamedApiResourceResponse> forms;
     private PokemonSpritesResponse sprites;
+    private PokemonCriesResponse cries;
     private List<PokemonStatResponse> stats;
     private List<PokemonTypeResponse> types;
+    private NamedApiResourceResponse species;
 
     public Pokemon intoPokemon() {
         Pokemon pokemon = new Pokemon();
@@ -35,6 +37,7 @@ public class PokemonResponse extends BaseEntityResponse {
         pokemon.setDefault(isDefault);
         pokemon.setDexOrder(order);
         pokemon.setWeight(weight);
+        pokemon.setSpeciesReferenceId(species.getId());
         return pokemon;
     }
 }

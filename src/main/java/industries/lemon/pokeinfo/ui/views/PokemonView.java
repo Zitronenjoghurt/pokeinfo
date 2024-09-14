@@ -1,5 +1,6 @@
 package industries.lemon.pokeinfo.ui.views;
 
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -9,6 +10,7 @@ import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import industries.lemon.pokeinfo.Constants;
+import industries.lemon.pokeinfo.services.AbilityService;
 import industries.lemon.pokeinfo.services.PageStateService;
 import industries.lemon.pokeinfo.services.PokemonNameService;
 import industries.lemon.pokeinfo.services.PokemonSpeciesService;
@@ -34,6 +36,7 @@ public class PokemonView extends VerticalLayout implements HasUrlParameter<Strin
     private boolean loading = false;
 
     public PokemonView(
+            AbilityService abilityService,
             PageStateService pageStateService,
             PokemonNameService pokemonNameService,
             PokemonSpeciesService pokemonSpeciesService
@@ -61,7 +64,7 @@ public class PokemonView extends VerticalLayout implements HasUrlParameter<Strin
         VerticalLayout topBar = new VerticalLayout(searchLayout, shinyButton);
         topBar.setAlignItems(Alignment.CENTER);
 
-        this.speciesContainer = new SpeciesContainer(pageStateService);
+        this.speciesContainer = new SpeciesContainer(abilityService, pageStateService);
         speciesContainer.setVisible(false);
 
         languageSelector.setValue(9);
@@ -73,7 +76,20 @@ public class PokemonView extends VerticalLayout implements HasUrlParameter<Strin
     @Override
     public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String nationalDex) {
         int speciesId = parseSpeciesId(nationalDex);
-        search(speciesId);
+
+        // Ensures it only searches when the UI is ready
+        if (initialized) {
+            search(speciesId);
+        } else {
+            // If UI wasn't initialized yet the onAttach will handle the search
+            pageStateService.setCurrentSpeciesId(speciesId);
+        }
+    }
+
+    @Override
+    public void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        search(pageStateService.getCurrentSpeciesId());
     }
 
     private void searchName() {
@@ -206,7 +222,7 @@ public class PokemonView extends VerticalLayout implements HasUrlParameter<Strin
 
     private String getSpeciesNameById(int speciesId) {
         int languageId = languageSelector.getValue();
-        return pokemonNameService.getSpeciesNames(languageId).get(speciesId - 1);
+        return pokemonNameService.getNameByIdAndLanguage(speciesId, languageId);
     }
 
     private int parseSpeciesId(String idString) {

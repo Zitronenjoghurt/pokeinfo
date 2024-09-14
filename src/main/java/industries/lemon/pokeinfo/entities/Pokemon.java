@@ -40,6 +40,9 @@ public class Pokemon extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private PokemonSprites sprites;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private PokemonCries cries;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "pokemon_id")
     private Set<PokemonStat> stats;
@@ -53,6 +56,9 @@ public class Pokemon extends BaseEntity {
     @OneToMany(mappedBy = "pokemon")
     @JsonIgnore
     private Set<PokemonSpeciesVariant> speciesVariants;
+
+    @Column
+    private Integer speciesReferenceId;
 
     public Optional<PokemonStat> getStatByName(String name) {
         return getStats().stream()

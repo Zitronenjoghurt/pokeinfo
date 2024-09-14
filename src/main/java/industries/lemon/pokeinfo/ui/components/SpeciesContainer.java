@@ -5,6 +5,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import industries.lemon.pokeinfo.entities.FlavorText;
 import industries.lemon.pokeinfo.entities.Pokemon;
 import industries.lemon.pokeinfo.entities.PokemonSpecies;
+import industries.lemon.pokeinfo.services.AbilityService;
 import industries.lemon.pokeinfo.services.PageStateService;
 import industries.lemon.pokeinfo.interfaces.HasLanguage;
 
@@ -24,6 +25,7 @@ public class SpeciesContainer extends VerticalLayout {
     private PokemonSpecies currentSpecies;
 
     public SpeciesContainer(
+            AbilityService abilityService,
             PageStateService pageStateService
     ) {
         this.pageStateService = pageStateService;
@@ -52,7 +54,7 @@ public class SpeciesContainer extends VerticalLayout {
         this.flavorTextContainer = new FlavorTextContainer();
 
         this.artwork = new ArtworkContainer(350);
-        this.defaultContainer = new PokemonContainer();
+        this.defaultContainer = new PokemonContainer(abilityService);
 
         VerticalLayout basicInfo = new VerticalLayout(infoGrid, flavorTextContainer);
         basicInfo.setAlignItems(Alignment.CENTER);

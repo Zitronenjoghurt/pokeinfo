@@ -1,5 +1,6 @@
 package industries.lemon.pokeinfo.entities;
 
+import industries.lemon.pokeinfo.interfaces.HasLanguage;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "verbose_effect")
-public class VerboseEffect {
+public class VerboseEffect implements HasLanguage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)

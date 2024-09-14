@@ -8,10 +8,13 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.server.VaadinSession;
 import industries.lemon.pokeinfo.entities.Pokemon;
 import industries.lemon.pokeinfo.entities.PokemonType;
 import industries.lemon.pokeinfo.enums.PokemonTyping;
+import industries.lemon.pokeinfo.services.AbilityService;
 import industries.lemon.pokeinfo.ui.views.TypeView;
+import industries.lemon.pokeinfo.utils.BrowserSupport;
 import industries.lemon.pokeinfo.utils.UnitsUtils;
 
 import java.util.ArrayList;
@@ -24,15 +27,17 @@ public class PokemonContainer extends FlexLayout {
     private final PokemonStatsContainer statsContainer;
     private final List<PokemonTyping> currentTypes = new ArrayList<>();
     private final SpritesContainer spritesContainer;
+    private final AudioPlayer audioPlayer;
     private final IconLabeledField heightField;
     private final IconLabeledField weightField;
     private final IconLabeledField baseXpField;
+    private final AbilityList abilityList;
 
     private static final int TYPE_ICON_SIZE = 30;
     private static final int TYPE_ICON_FONT_SIZE = 20;
     private static final int TYPE_ICON_WIDTH = 140;
 
-    public PokemonContainer() {
+    public PokemonContainer(AbilityService abilityService) {
         setAlignItems(Alignment.START);
         setJustifyContentMode(JustifyContentMode.EVENLY);
         setFlexDirection(FlexDirection.ROW);
@@ -50,6 +55,8 @@ public class PokemonContainer extends FlexLayout {
         leftContainer.setWidth("auto");
 
         this.spritesContainer = new SpritesContainer();
+        this.abilityList = new AbilityList(abilityService);
+        this.audioPlayer = new AudioPlayer();
         this.heightField = new IconLabeledField("Height", "size", "0", 20);
         this.weightField = new IconLabeledField("Weight", "weight", "0", 20);
         FlexLayout sizeContainer = new FlexLayout(heightField, weightField);
@@ -59,7 +66,7 @@ public class PokemonContainer extends FlexLayout {
         sizeContainer.setFlexWrap(FlexLayout.FlexWrap.WRAP);
         sizeContainer.setSizeFull();
         this.baseXpField = new IconLabeledField("Base Exp.", "xp", "0", 20);
-        VerticalLayout rightContainer = new VerticalLayout(spritesContainer, sizeContainer, baseXpField);
+        VerticalLayout rightContainer = new VerticalLayout(spritesContainer, abilityList, audioPlayer, sizeContainer, baseXpField);
         rightContainer.setAlignItems(Alignment.CENTER);
         rightContainer.setWidth("auto");
 
@@ -80,6 +87,14 @@ public class PokemonContainer extends FlexLayout {
 
         this.heightField.setValue(heightMetric + " | " + heightImperial);
         this.weightField.setValue(weightMetric + " | " + weightImperial);
+
+        this.abilityList.update(pokemon);
+
+        if (BrowserSupport.supportsOGG(VaadinSession.getCurrent().getBrowser())) {
+            this.audioPlayer.update(pokemon.getCries().getLatest());
+        } else {
+            this.audioPlayer.setVisible(false);
+        }
     }
 
     private void addTypes(Set<PokemonType> types) {

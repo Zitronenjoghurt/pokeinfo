@@ -1,6 +1,7 @@
 package industries.lemon.pokeinfo.entities;
 
 import industries.lemon.pokeinfo.interfaces.HasLanguage;
+import industries.lemon.pokeinfo.interfaces.IFlavorText;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "flavor_texts")
-public class FlavorText implements HasLanguage {
+public class FlavorText implements HasLanguage, IFlavorText {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)

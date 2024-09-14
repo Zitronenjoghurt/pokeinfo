@@ -41,9 +41,11 @@ public class PokemonService extends BaseEntityService<Pokemon, PokemonRepository
     @Override
     protected Pokemon fromResponse(PokemonResponse response) {
         PokemonSprites pokemonSprites = response.getSprites().intoPokemonSprites();
+        PokemonCries pokemonCries = response.getCries().intoPokemonCries();
         Pokemon pokemon = response.intoPokemon();
         pokemon.setPokemonAbilities(findOrCreateAbilities(response, pokemon));
         pokemon.setSprites(pokemonSprites);
+        pokemon.setCries(pokemonCries);
         pokemon.setStats(createStats(response.getStats()));
         pokemon.setTypes(createTypes(response.getTypes()));
         return pokemon;

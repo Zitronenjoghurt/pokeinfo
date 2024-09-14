@@ -8,8 +8,8 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "flavor_texts")
-public class FlavorText implements HasLanguage {
+@Table
+public class AbilityFlavorText implements HasLanguage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
@@ -22,5 +22,5 @@ public class FlavorText implements HasLanguage {
     private String language;
 
     @Column(nullable = false)
-    private String version;
+    private String versionGroup;
 }

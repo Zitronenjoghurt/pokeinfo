@@ -5,14 +5,13 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import industries.lemon.pokeinfo.entities.FlavorText;
 import industries.lemon.pokeinfo.entities.Pokemon;
 import industries.lemon.pokeinfo.entities.PokemonSpecies;
-import industries.lemon.pokeinfo.services.FlavorTextService;
 import industries.lemon.pokeinfo.services.PageStateService;
+import industries.lemon.pokeinfo.interfaces.HasLanguage;
 
 import java.util.Optional;
 import java.util.Set;
 
 public class SpeciesContainer extends VerticalLayout {
-    private final FlavorTextService flavorTextService;
     private final PageStateService pageStateService;
     private final ArtworkContainer artwork;
     private final PokemonContainer defaultContainer;
@@ -25,11 +24,9 @@ public class SpeciesContainer extends VerticalLayout {
     private PokemonSpecies currentSpecies;
 
     public SpeciesContainer(
-            PageStateService pageStateService,
-            FlavorTextService flavorTextService
+            PageStateService pageStateService
     ) {
         this.pageStateService = pageStateService;
-        this.flavorTextService = flavorTextService;
 
         getStyle()
                 .set("border-radius", "var(--lumo-border-radius-l)")
@@ -82,7 +79,7 @@ public class SpeciesContainer extends VerticalLayout {
         this.specialStateField.setValue(species.getSpecialStates());
 
         Set<FlavorText> flavorTexts = species.getFlavorTexts();
-        Set<FlavorText> filteredFlavorTexts = flavorTextService.getFlavorTextsByLanguage(flavorTexts, "en");
+        Set<FlavorText> filteredFlavorTexts = HasLanguage.filterByLanguage(flavorTexts, "en");
         this.flavorTextContainer.update(filteredFlavorTexts);
 
         Optional<Pokemon> defaultPokemon = species.getDefaultVariant();

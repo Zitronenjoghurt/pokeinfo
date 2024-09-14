@@ -15,10 +15,4 @@ public class FlavorTextService {
                 .map(FlavorTextResponse::intoFlavorText)
                 .collect(Collectors.toSet());
     }
-
-    public Set<FlavorText> getFlavorTextsByLanguage(Set<FlavorText> flavorTexts, String language) {
-        return flavorTexts.stream()
-                .filter(flavorText -> flavorText.getLanguage().equalsIgnoreCase(language))
-                .collect(Collectors.toSet());
-    }
 }

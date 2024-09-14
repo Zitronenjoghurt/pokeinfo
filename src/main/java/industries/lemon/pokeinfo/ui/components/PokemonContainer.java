@@ -2,6 +2,7 @@ package industries.lemon.pokeinfo.ui.components;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
@@ -27,9 +28,9 @@ public class PokemonContainer extends FlexLayout {
     private final IconLabeledField weightField;
     private final IconLabeledField baseXpField;
 
-    private static int TYPE_ICON_SIZE = 30;
-    private static int TYPE_ICON_FONT_SIZE = 20;
-    private static int TYPE_ICON_WIDTH = 140;
+    private static final int TYPE_ICON_SIZE = 30;
+    private static final int TYPE_ICON_FONT_SIZE = 20;
+    private static final int TYPE_ICON_WIDTH = 140;
 
     public PokemonContainer() {
         setAlignItems(Alignment.START);
@@ -38,9 +39,9 @@ public class PokemonContainer extends FlexLayout {
         setFlexWrap(FlexWrap.WRAP);
 
         this.typeLabels = new HorizontalLayout();
-        Button typeMatchupButton = new Button(new Icon(VaadinIcon.OPEN_BOOK));
+        Button typeMatchupButton = new Button(new Icon(VaadinIcon.ACADEMY_CAP));
         typeMatchupButton.addClickListener(e -> onTypeMatchupClicked());
-        typeMatchupButton.getStyle().set("box-shadow", "0 4px 8px rgba(0,0,0,0.2)");
+        typeMatchupButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         HorizontalLayout typesBar = new HorizontalLayout(typeLabels, typeMatchupButton);
 
         this.statsContainer = new PokemonStatsContainer();

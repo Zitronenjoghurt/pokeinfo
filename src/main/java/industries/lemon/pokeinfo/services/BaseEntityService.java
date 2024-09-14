@@ -4,10 +4,13 @@ import industries.lemon.pokeinfo.entities.BaseEntity;
 import industries.lemon.pokeinfo.thirdparty.pokeapi.PokeApiClient;
 import industries.lemon.pokeinfo.thirdparty.pokeapi.models.BaseEntityResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public abstract class BaseEntityService<E extends BaseEntity, R extends JpaRepository<E, Long>, P extends BaseEntityResponse> {
     protected final PokeApiClient pokeApiClient;
@@ -26,6 +29,12 @@ public abstract class BaseEntityService<E extends BaseEntity, R extends JpaRepos
                 .flatMap(optionalPokemon -> optionalPokemon
                         .map(Mono::just)
                         .orElseGet(() -> fetchAndSave(id)));
+    }
+
+    public Mono<Set<E>> fetchMultiple(Set<Integer> ids) {
+        return Flux.fromIterable(ids)
+                .flatMap(this::fetch)
+                .collect(Collectors.toSet());
     }
 
     protected Mono<E> fetchAndSave(int id) {

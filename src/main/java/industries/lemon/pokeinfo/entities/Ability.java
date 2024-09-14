@@ -39,6 +39,16 @@ public class Ability extends BaseInitializableEntity<AbilityResponse> {
     @JoinColumn(name = "ability_id")
     private Set<VerboseEffect> verboseEffects = new HashSet<>();
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinTable
+    private Set<AbilityFlavorText> flavorTexts = new HashSet<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable
+    @Column
+    // Reference to Pokémon which have this ability
+    private Set<Integer> pokemonReferenceIds = new HashSet<>();
+
     @Override
     public void applyResponse(AbilityResponse response) {
         setName(response.getName());

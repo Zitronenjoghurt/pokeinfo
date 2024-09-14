@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 @VaadinSessionScope
 public class PageStateService {
     private int currentSpeciesId = 1;
+    private int currentAbilityId = 1;
     private boolean isShinyEnabled = false;
     private PokemonTyping primaryType = null;
     private PokemonTyping secondaryType = null;

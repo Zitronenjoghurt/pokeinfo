@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public abstract class BaseInitializableEntityService<E extends BaseInitializableEntity, R extends JpaRepository<E, Long>, P extends BaseEntityResponse>
@@ -23,13 +24,21 @@ public abstract class BaseInitializableEntityService<E extends BaseInitializable
     }
 
     public E findByIdOrCreate(int id) {
-        return findById(id)
-                .orElseGet(() -> {
-                    E entity = entitySupplier.get();
-                    entity.setEntityId(id);
-                    repository.save(entity);
-                    return entity;
-                });
+        Optional<E> entity = findById(id);
+        if (entity.isPresent()) {
+            return entity.get();
+        }
+
+        synchronized (this) {
+            entity = findById(id);
+            if (entity.isPresent()) {
+                return entity.get();
+            }
+
+            E newEntity = entitySupplier.get();
+            newEntity.setEntityId(id);
+            return repository.save(newEntity);
+        }
     }
 
     public Mono<E> getInitialized(E entity) {
@@ -44,6 +53,10 @@ public abstract class BaseInitializableEntityService<E extends BaseInitializable
                     repository.save(entity);
                     return entity;
                 });
+    }
+
+    public Mono<E> findInitialized(int id) {
+        return getInitialized(findByIdOrCreate(id));
     }
 
     @Override

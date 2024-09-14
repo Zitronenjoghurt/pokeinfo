@@ -9,15 +9,14 @@ import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import industries.lemon.pokeinfo.Constants;
-import industries.lemon.pokeinfo.services.FlavorTextService;
 import industries.lemon.pokeinfo.services.PageStateService;
 import industries.lemon.pokeinfo.services.PokemonNameService;
 import industries.lemon.pokeinfo.services.PokemonSpeciesService;
 import industries.lemon.pokeinfo.ui.MainLayout;
+import industries.lemon.pokeinfo.ui.components.LanguageSelector;
 import industries.lemon.pokeinfo.ui.components.SpeciesContainer;
 
 import java.util.List;
-import java.util.Map;
 
 @Route(value = "pokemon", layout = MainLayout.class)
 @PageTitle("Pokemon | Pokedata")
@@ -26,7 +25,7 @@ public class PokemonView extends VerticalLayout implements HasUrlParameter<Strin
     private final PageStateService pageStateService;
     private final PokemonNameService pokemonNameService;
     private final PokemonSpeciesService pokemonSpeciesService;
-    private final ComboBox<Integer> languageSelector;
+    private final LanguageSelector languageSelector;
     private final ComboBox<String> nameSearchBar;
     private final IntegerField dexNumberSearchBar;
     private final SpeciesContainer speciesContainer;
@@ -34,16 +33,7 @@ public class PokemonView extends VerticalLayout implements HasUrlParameter<Strin
     private boolean initialized = false;
     private boolean loading = false;
 
-    private static final Map<Integer, String> LANGUAGE_FLAGS = Map.of(
-            5, "🇫🇷",  // French
-            6, "🇩🇪",  // German
-            7, "🇪🇸",  // Spanish
-            8, "🇮🇹",  // Italian
-            9, "🇺🇸"       // English
-    );
-
     public PokemonView(
-            FlavorTextService flavorTextService,
             PageStateService pageStateService,
             PokemonNameService pokemonNameService,
             PokemonSpeciesService pokemonSpeciesService
@@ -71,7 +61,7 @@ public class PokemonView extends VerticalLayout implements HasUrlParameter<Strin
         VerticalLayout topBar = new VerticalLayout(searchLayout, shinyButton);
         topBar.setAlignItems(Alignment.CENTER);
 
-        this.speciesContainer = new SpeciesContainer(pageStateService, flavorTextService);
+        this.speciesContainer = new SpeciesContainer(pageStateService);
         speciesContainer.setVisible(false);
 
         languageSelector.setValue(9);
@@ -174,12 +164,8 @@ public class PokemonView extends VerticalLayout implements HasUrlParameter<Strin
         nameSearchBar.getDataProvider().refreshAll();
     }
 
-    private ComboBox<Integer> createLanguageSelector() {
-        ComboBox<Integer> languageSelector = new ComboBox<>();
-        languageSelector.setItems(LANGUAGE_FLAGS.keySet());
-        languageSelector.setItemLabelGenerator(LANGUAGE_FLAGS::get);
-        languageSelector.setWidth("80px");
-        languageSelector.getElement().setAttribute("aria-label", "Select Language");
+    private LanguageSelector createLanguageSelector() {
+        LanguageSelector languageSelector = new LanguageSelector();
         languageSelector.addValueChangeListener(event -> {
             updateSearchBar(event.getValue());
             if (initialized) {
